@@ -1,0 +1,62 @@
+name: Commit generated site baseline
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  commit-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python -m pip install requests beautifulsoup4
+      - name: Generate baseline
+        run: |
+          rm -rf site/v0.1
+          python scripts/crawl_site.py
+          python scripts/clean_generated.py
+          mkdir -p site/v0.1
+          shopt -s dotglob
+          for item in site/*; do
+            if [ "$(basename "$item")" != "v0.1" ]; then mv "$item" site/v0.1/; fi
+          done
+          printf '%s\n' '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=v0.1/"><meta name="robots" content="noindex, nofollow, noarchive"><title>Skyodor</title></head><body><a href="v0.1/">Continue to Skyodor</a></body></html>' > site/index.html
+      - name: Add noindex metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          for path in Path('site').rglob('*.html'):
+              soup = BeautifulSoup(path.read_text(encoding='utf-8', errors='replace'), 'html.parser')
+              head = soup.head or soup.insert(0, soup.new_tag('head'))
+              tag = head.find('meta', attrs={'name': 'robots'})
+              if tag: tag['content'] = 'noindex, nofollow, noarchive'
+              else: head.insert(0, soup.new_tag('meta', attrs={'name':'robots','content':'noindex, nofollow, noarchive'}))
+              path.write_text(str(soup), encoding='utf-8')
+          PY
+      - name: Validate generated files
+        run: |
+          test -f site/v0.1/index.html
+          test "$(find site/v0.1 -type f | wc -l)" -gt 10
+          test "$(find site/v0.1 -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' -o -iname '*.svg' \) | wc -l)" -gt 0
+      - name: Create branch and pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="committed-baseline-${GITHUB_RUN_ID}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git switch -c "$branch"
+          git add site
+          git commit -m 'Commit generated v0.1 site baseline'
+          git push --set-upstream origin "$branch"
+          gh pr create --base main --head "$branch" --title 'Commit generated v0.1 site baseline' --body 'Commits generated HTML, images, CSS, JS, and fonts under site/v0.1.'
