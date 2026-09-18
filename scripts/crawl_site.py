@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build a static, GitHub-Pages-friendly copy of skyodor.com."""
+"""Build a resilient, GitHub-Pages-friendly static copy of skyodor.com."""
 from __future__ import annotations
 
 import hashlib
 import mimetypes
+import os
 import re
 import shutil
 from pathlib import Path
@@ -15,47 +16,40 @@ from bs4 import BeautifulSoup
 BASE_URL = "https://www.skyodor.com/"
 HOST = urlparse(BASE_URL).netloc
 OUT = Path("site")
-TIMEOUT = 25
-
+TIMEOUT = 30
 session = requests.Session()
-session.headers.update({"User-Agent": "skyodor-pages-static-builder/1.0"})
+session.headers.update({"User-Agent": "skyodor-pages-static-builder/2.0"})
 seen_pages: set[str] = set()
 asset_map: dict[str, str] = {}
 
 
 def normalize(url: str) -> str:
-    p = urlparse(urljoin(BASE_URL, url))
-    return p._replace(fragment="").geturl()
+    parsed = urlparse(urljoin(BASE_URL, url))
+    return parsed._replace(fragment="").geturl()
 
 
 def safe_path(url: str, default_name: str = "index.html") -> Path:
-    p = urlparse(url)
-    raw = unquote(p.path).strip("/")
+    parsed = urlparse(url)
+    raw = unquote(parsed.path).strip("/")
     if not raw:
         return Path(default_name)
-    path = Path(*[part for part in raw.split("/") if part not in (".", "..")])
-    if p.path.endswith("/"):
+    parts = [part for part in raw.split("/") if part not in (".", "..")]
+    path = Path(*parts)
+    if parsed.path.endswith("/"):
         return path / default_name
-    if path.suffix:
-        return path
-    return path / default_name
+    return path if path.suffix else path / default_name
 
 
-def local_asset(url: str, content_type: str | None = None) -> Path:
-    if url in asset_map:
-        return Path(asset_map[url])
-    p = urlparse(url)
-    candidate = safe_path(url, "asset")
-    if not candidate.suffix:
-        ext = mimetypes.guess_extension((content_type or "").split(";")[0]) or ".bin"
-        candidate = candidate.with_name(candidate.name + ext)
-    # Query-string collisions get a stable suffix.
-    if p.query:
-        digest = hashlib.sha1(p.query.encode()).hexdigest()[:8]
-        candidate = candidate.with_name(f"{candidate.stem}-{digest}{candidate.suffix}")
-    rel = Path("assets") / candidate
-    asset_map[url] = rel.as_posix()
-    return rel
+def asset_target(url: str, content_type: str = "") -> Path:
+    parsed = urlparse(url)
+    path = safe_path(url, "asset")
+    if not path.suffix:
+        extension = mimetypes.guess_extension(content_type.split(";", 1)[0].strip()) or ".bin"
+        path = path.with_name(path.name + extension)
+    if parsed.query:
+        digest = hashlib.sha1(parsed.query.encode()).hexdigest()[:8]
+        path = path.with_name(f"{path.stem}-{digest}{path.suffix}")
+    return Path("assets") / path
 
 
 def download(url: str) -> tuple[bytes, str]:
@@ -64,48 +58,44 @@ def download(url: str) -> tuple[bytes, str]:
     return response.content, response.headers.get("content-type", "")
 
 
-def save_asset(url: str) -> str:
-    target = local_asset(url)
-    if (OUT / target).exists():
-        return target.as_posix()
-    data, content_type = download(url)
-    target = local_asset(url, content_type)
+def relative(from_file: Path, target: str | Path) -> str:
+    return Path(os.path.relpath(str(target), start=from_file.parent)).as_posix()
+
+
+def save_asset(url: str, data: bytes | None = None, content_type: str = "") -> str:
+    if url in asset_map and (OUT / asset_map[url]).exists():
+        return asset_map[url]
+    if data is None:
+        data, content_type = download(url)
+    target = asset_target(url, content_type)
     destination = OUT / target
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(data)
+    asset_map[url] = target.as_posix()
     if "css" in content_type or target.suffix.lower() == ".css":
-        text = data.decode("utf-8", errors="replace")
-        text = rewrite_css(text, url, target.parent)
-        destination.write_text(text, encoding="utf-8")
+        css = data.decode("utf-8", errors="replace")
+        destination.write_text(rewrite_css(css, url, target), encoding="utf-8")
     return target.as_posix()
 
 
-def relative(from_file: Path, target: str) -> str:
-    return Path(__import__("os").path.relpath(target, start=from_file.parent)).as_posix()
-
-
-def rewrite_css(text: str, source_url: str, source_dir: Path) -> str:
-    def repl(match: re.Match[str]) -> str:
-        raw = match.group(1).strip(" \'\"")
+def rewrite_css(text: str, source_url: str, source_file: Path) -> str:
+    def replace(match: re.Match[str]) -> str:
+        raw = match.group(1).strip().strip("'\"")
         if raw.startswith(("data:", "#")):
             return match.group(0)
         absolute = normalize(urljoin(source_url, raw))
-        if urlparse(absolute).netloc not in (HOST, ""):
-            return match.group(0)
         try:
             saved = save_asset(absolute)
-            return match.group(0).replace(raw, relative(source_dir, saved))
+            return match.group(0).replace(raw, relative(source_file, saved))
         except requests.RequestException:
             return match.group(0)
-    return re.sub(r"url\(([^)]+)\)", repl, text, flags=re.I)
+    return re.sub(r"url\(([^)]+)\)", replace, text, flags=re.I)
 
 
 def process_page(url: str) -> None:
     url = normalize(url)
-    if url in seen_pages:
-        return
     parsed = urlparse(url)
-    if parsed.netloc != HOST or parsed.path.lower().endswith(('.pdf', '.zip')):
+    if url in seen_pages or parsed.netloc != HOST or parsed.path.lower().endswith((".pdf", ".zip")):
         return
     seen_pages.add(url)
     try:
@@ -117,35 +107,40 @@ def process_page(url: str) -> None:
         return
 
     output = safe_path(url)
-    output.parent.mkdir(parents=True, exist_ok=True)
     soup = BeautifulSoup(data, "html.parser")
-
-    for tag, attr in [("img", "src"), ("script", "src"), ("link", "href"), ("source", "src")]:
+    for tag, attr in (("img", "src"), ("script", "src"), ("link", "href"), ("source", "src")):
         for node in soup.find_all(tag):
             raw = node.get(attr)
             if not raw or raw.startswith(("data:", "mailto:", "javascript:", "#")):
                 continue
             absolute = normalize(urljoin(url, raw))
-            if urlparse(absolute).netloc != HOST:
+            # Assets may be hosted on a CDN; download them too.
+            if tag == "link" and node.get("rel") and "stylesheet" not in node.get("rel"):
                 continue
             try:
                 saved = save_asset(absolute)
                 node[attr] = relative(output, saved)
             except requests.RequestException:
+                print(f"Asset unavailable: {absolute}")
+
+    for node in soup.find_all(srcset=True):
+        values = []
+        for item in node["srcset"].split(","):
+            bits = item.strip().split()
+            if not bits:
                 continue
+            absolute = normalize(urljoin(url, bits[0]))
+            try:
+                bits[0] = relative(output, save_asset(absolute))
+            except requests.RequestException:
+                pass
+            values.append(" ".join(bits))
+        node["srcset"] = ", ".join(values)
 
     for node in soup.find_all(href=True):
         absolute = normalize(urljoin(url, node["href"]))
-        if urlparse(absolute).netloc == HOST and not urlparse(absolute).path.lower().endswith(('.pdf', '.zip')):
-            target = safe_path(absolute)
-            node["href"] = relative(output, target)
-            process_page(absolute)
-
-    for node in soup.find_all(src=True):
-        if node.name in ("img", "script", "source"):
-            continue
-        absolute = normalize(urljoin(url, node["src"]))
-        if urlparse(absolute).netloc == HOST:
+        if urlparse(absolute).netloc == HOST and not urlparse(absolute).path.lower().endswith((".pdf", ".zip")):
+            node["href"] = relative(output, safe_path(absolute))
             process_page(absolute)
 
     destination = OUT / output
