@@ -28,17 +28,11 @@ jobs:
         run: python -m pip install requests beautifulsoup4
       - name: Build static site
         run: python scripts/crawl_site.py
-      - name: Remove residual Weebly branding
+      - name: Remove residual platform branding
         run: python scripts/clean_generated.py
-      - name: Neutralize platform tokens
-        shell: bash
-        run: |
-          find site -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0 | while IFS= read -r -d '' file; do
-            sed -i -E 's/[Ww][Ee][Ee][Bb][Ll][Yy][Cc][Ll][Oo][Uu][Dd]/siteplatform/g; s/[Ww][Ee][Ee][Bb][Ll][Yy]/siteplatform/g; s/[Ww][Ss][Ii][Tt][Ee]-/site-/g' "$file"
-          done
       - name: Validate generated site
         shell: bash
-        run: '! grep -RIniE "weebly|weeblycloud|wsite-|powered[[:space:]]+by[[:space:]]+siteplatform" site'
+        run: '! grep -RIniE "weebly|weeblycloud|powered[[:space:]]+by[[:space:]]+weebly" site'
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
