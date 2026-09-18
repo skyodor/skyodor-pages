@@ -30,27 +30,29 @@ jobs:
         run: python scripts/crawl_site.py
       - name: Clean generated baseline
         run: python scripts/clean_generated.py
-      - name: Place baseline under site/v01
+      - name: Place baseline under version paths
         shell: bash
         run: |
-          mkdir -p site/v01
+          mkdir -p site/v01 site/v02
           shopt -s dotglob
           for item in site/*; do
-            if [ "$(basename "$item")" != "v01" ]; then
+            base="$(basename "$item")"
+            if [ "$base" != "v01" ] && [ "$base" != "v02" ]; then
               mv "$item" site/v01/
             fi
           done
+          cp -a site/v01/. site/v02/
           cat > site/index.html <<'EOF'
           <!doctype html>
           <html lang="en">
           <head>
             <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0; url=v01/">
-            <link rel="canonical" href="v01/">
+            <meta http-equiv="refresh" content="0; url=v02/">
+            <link rel="canonical" href="v02/">
             <meta name="robots" content="noindex, nofollow, noarchive">
             <title>Skyodor</title>
           </head>
-          <body><a href="v01/">Continue to Skyodor</a></body>
+          <body><a href="v02/">Continue to Skyodor v0.2</a></body>
           </html>
           EOF
       - name: Add noindex metadata
@@ -70,12 +72,15 @@ jobs:
                   head.insert(0, tag)
               path.write_text(str(soup), encoding='utf-8')
           PY
+      - name: Validate v02 assets and references
+        run: python scripts/validate_static_site.py site/v02
       - name: Validate versioned baseline
         shell: bash
         run: |
           test -f site/v01/index.html
+          test -f site/v02/index.html
           test -f site/index.html
-          test "$(grep -RIl 'name="robots"' site --include='*.html' | wc -l)" -gt 0
+          test "$(grep -RIl 'name=\"robots\"' site --include='*.html' | wc -l)" -gt 0
           ! grep -RIniE "weebly|weeblycloud|powered[[:space:]]+by[[:space:]]+weebly" site --include="*.html"
       - name: Configure Pages
         uses: actions/configure-pages@v5
