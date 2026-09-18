@@ -18,7 +18,7 @@ HOST = urlparse(BASE_URL).netloc
 OUT = Path("site")
 TIMEOUT = 30
 session = requests.Session()
-session.headers.update({"User-Agent": "skyodor-pages-static-builder/3.0"})
+session.headers.update({"User-Agent": "skyodor-pages-static-builder/4.0"})
 seen_pages: set[str] = set()
 asset_map: dict[str, str] = {}
 
@@ -80,10 +80,10 @@ def save_asset(url: str, data: bytes | None = None, content_type: str = "") -> s
 def rewrite_css(text: str, source_url: str, source_file: Path) -> str:
     def replace(match: re.Match[str]) -> str:
         raw = match.group(1).strip().strip("'\"")
-        if raw.startswith(("data:", "#", "http://", "https://")) and not raw.startswith(("http://", "https://")):
+        if raw.startswith(("data:", "#")):
             return match.group(0)
+        absolute = normalize(urljoin(source_url, raw))
         try:
-            absolute = normalize(urljoin(source_url, raw))
             saved = save_asset(absolute)
             return match.group(0).replace(raw, relative(source_file, saved))
         except requests.RequestException:
@@ -113,6 +113,18 @@ def rewrite_inline_style(value: str, page_url: str, output: Path) -> str:
     return re.sub(r"url\(([^)]+)\)", replace, value, flags=re.I)
 
 
+def rewrite_srcset(value: str, page_url: str, output: Path) -> str:
+    rewritten = []
+    for item in value.split(","):
+        bits = item.strip().split()
+        if bits:
+            saved = save_reference(bits[0], page_url, output)
+            if saved:
+                bits[0] = saved
+            rewritten.append(" ".join(bits))
+    return ", ".join(rewritten)
+
+
 def process_page(url: str) -> None:
     url = normalize(url)
     parsed = urlparse(url)
@@ -130,37 +142,37 @@ def process_page(url: str) -> None:
     output = safe_path(url)
     soup = BeautifulSoup(data, "html.parser")
 
-    # Capture normal, lazy-loaded, responsive, poster, and data-* image references.
-    asset_attrs = ("src", "href", "poster", "data-src", "data-lazy-src", "data-original", "data-bg", "data-background-image")
+    asset_attrs = ("src", "poster", "data-src", "data-lazy-src", "data-original", "data-bg", "data-background-image", "data-image", "data-lazy", "data-flickity-lazyload")
     for node in soup.find_all(True):
         for attr in asset_attrs:
             raw = node.get(attr)
-            if raw and not (attr == "href" and node.name == "a"):
+            if raw:
                 saved = save_reference(raw, url, output)
                 if saved:
                     node[attr] = saved
+        for attr in ("srcset", "data-srcset", "data-lazy-srcset", "data-bgset"):
+            raw = node.get(attr)
+            if raw:
+                node[attr] = rewrite_srcset(raw, url, output)
         if node.get("style"):
             node["style"] = rewrite_inline_style(node["style"], url, output)
 
-    for node in soup.find_all(srcset=True):
-        rewritten = []
-        for item in node["srcset"].split(","):
-            bits = item.strip().split()
-            if bits:
-                saved = save_reference(bits[0], url, output)
-                if saved:
-                    bits[0] = saved
-                rewritten.append(" ".join(bits))
-        node["srcset"] = ", ".join(rewritten)
-
-    # Rewrite CSS and other external resources referenced in link tags.
     for node in soup.find_all("link", href=True):
         if node.get("rel") and "stylesheet" in node.get("rel"):
             saved = save_reference(node["href"], url, output)
             if saved:
                 node["href"] = saved
 
-    # Rewrite internal navigation and recursively crawl linked pages.
+    for node in soup.find_all("meta", content=True):
+        if node.get("property", "").lower() in {"og:image", "og:image:url", "twitter:image"}:
+            saved = save_reference(node["content"], url, output)
+            if saved:
+                node["content"] = saved
+
+    for node in soup.find_all("style"):
+        if node.string:
+            node.string = rewrite_css(node.string, url, output)
+
     for node in soup.find_all(href=True):
         absolute = normalize(urljoin(url, node["href"]))
         target = urlparse(absolute)
