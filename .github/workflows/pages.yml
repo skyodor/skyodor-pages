@@ -72,6 +72,8 @@ jobs:
                   head.insert(0, tag)
               path.write_text(str(soup), encoding='utf-8')
           PY
+      - name: Repair image href references
+        run: python scripts/repair_image_hrefs.py
       - name: Validate v02 assets and references
         run: python scripts/validate_static_site.py site/v02
       - name: Validate versioned baseline
