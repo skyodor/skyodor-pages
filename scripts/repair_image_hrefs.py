@@ -12,8 +12,10 @@ EXTS = ('.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg')
 session = requests.Session()
 session.headers['User-Agent'] = 'skyodor-static-builder/6.2'
 
-for version in ('v01', 'v02'):
+for version in ('v01', 'v02', 'v03'):
     version_root = ROOT / version
+    if not version_root.exists():
+        continue
     for html in version_root.rglob('*.html'):
         soup = BeautifulSoup(html.read_text(encoding='utf-8', errors='replace'), 'html.parser')
         changed = False
@@ -34,4 +36,4 @@ for version in ('v01', 'v02'):
             changed = True
         if changed:
             html.write_text(str(soup), encoding='utf-8')
-print('Repaired image href references')
+print('Repaired image href references for v01, v02, and v03')
