@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""Build an offline copy of the Weebly site with local assets."""
+"""Build a clean, self-contained static copy of the public site."""
 from __future__ import annotations
 import hashlib, mimetypes, os, re, shutil
 from pathlib import Path
 from urllib.parse import urljoin, urlparse, unquote
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 
 BASE_URL = 'https://www.skyodor.com/'
-HOST = urlparse(BASE_URL).netloc
+ALLOWED_HOSTS = {'www.skyodor.com', 'skyodor.com'}
 OUT = Path('site')
 TIMEOUT = 30
 session = requests.Session()
-session.headers['User-Agent'] = 'skyodor-pages-static-builder/5.0'
+session.headers['User-Agent'] = 'skyodor-static-builder/6.0'
 seen_pages, asset_map, failed = set(), {}, set()
 
 def normalize(value, base=BASE_URL):
     p = urlparse(urljoin(base, value))._replace(fragment='')
+    if p.netloc in ALLOWED_HOSTS:
+        p = p._replace(netloc='www.skyodor.com')
     return p.geturl()
 
 def safe_path(url, default='index.html'):
@@ -51,6 +53,7 @@ def relative(source, target):
     return Path(os.path.relpath(str(target), start=Path(source).parent)).as_posix()
 
 def save_asset(url, data=None, content_type=''):
+    url = normalize(url)
     if url in asset_map and (OUT / asset_map[url]).exists(): return asset_map[url]
     if data is None: data, content_type = download(url)
     target = target_for(url, content_type); dest = OUT / target
@@ -65,9 +68,8 @@ def rewrite_css(text, source_url, source_file):
         raw = m.group(1).strip().strip("'\"")
         if raw.startswith(('data:', '#')): return m.group(0)
         absolute = normalize(raw, source_url)
-        try: saved = save_asset(absolute); return m.group(0).replace(raw, relative(source_file, saved))
-        except requests.RequestException:
-            return m.group(0)
+        try: return m.group(0).replace(raw, relative(source_file, save_asset(absolute)))
+        except requests.RequestException: return m.group(0)
     return re.sub(r'url\(([^)]+)\)', repl, text, flags=re.I)
 
 def reference(raw, page_url, output):
@@ -89,10 +91,24 @@ def srcset(value, page_url, output):
             result.append(' '.join(bits))
     return ', '.join(result)
 
+def clean_document(soup):
+    for item in soup.find_all(string=lambda text: isinstance(text, Comment)):
+        item.extract()
+    for node in soup.find_all('meta'):
+        marker=' '.join(str(node.get(k,'')) for k in ('name','property','content')).lower()
+        if 'generator' in str(node.get('name','')).lower() or 'weebly' in marker:
+            node.decompose()
+    for node in soup.find_all(['a','script','iframe','link']):
+        values=' '.join(str(node.get(k,'')) for k in ('href','src','data','content')).lower()
+        if 'weebly.com' in values or 'weeblycloud.com' in values:
+            node.decompose()
+    for node in soup.find_all(string=True):
+        if node.parent and node.parent.name not in ('script','style'):
+            node.replace_with(re.sub(r'(?i)\bpowered\s+by\s+weebly\b', '', str(node)))
+
 def process(url):
-    url=normalize(url)
-    p=urlparse(url)
-    if url in seen_pages or p.netloc != HOST or p.path.lower().endswith(('.pdf','.zip')): return
+    url=normalize(url); p=urlparse(url)
+    if url in seen_pages or p.netloc not in ALLOWED_HOSTS or p.path.lower().endswith(('.pdf','.zip')): return
     seen_pages.add(url)
     try: data, ctype=download(url)
     except requests.RequestException as e: print(f'Skipping {url}: {e}'); return
@@ -105,8 +121,7 @@ def process(url):
             if saved: node[attr]=saved
         for attr in ('srcset','data-srcset','data-lazy-srcset','data-bgset'):
             if node.get(attr): node[attr]=srcset(node[attr],url,output)
-        if node.get('style'):
-            node['style']=rewrite_css(node['style'],url,output)
+        if node.get('style'): node['style']=rewrite_css(node['style'],url,output)
     for node in soup.find_all('link',href=True):
         rel=[str(x).lower() for x in node.get('rel',[])]
         if 'stylesheet' in rel:
@@ -121,12 +136,15 @@ def process(url):
         if node.string: node.string=rewrite_css(node.string,url,output)
     for node in soup.find_all('a',href=True):
         absolute=normalize(node['href'],url); target=urlparse(absolute)
-        if target.netloc==HOST and not target.path.lower().endswith(('.pdf','.zip','.jpg','.jpeg','.png','.gif','.webp','.svg','.css','.js')):
+        if target.netloc in ALLOWED_HOSTS and not target.path.lower().endswith(('.pdf','.zip','.jpg','.jpeg','.png','.gif','.webp','.svg','.css','.js')):
             node['href']=relative(output,safe_path(absolute)); process(absolute)
+    clean_document(soup)
     dest=OUT/output; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_text(str(soup),encoding='utf-8')
 
 def main():
     if OUT.exists(): shutil.rmtree(OUT)
-    OUT.mkdir(parents=True); process(BASE_URL); print(f'Built {len(seen_pages)} pages in {OUT}')
+    OUT.mkdir(parents=True); process(BASE_URL)
+    print(f'Built {len(seen_pages)} pages in {OUT}')
+    if failed: print(f'Unresolved assets: {len(failed)}')
 
 if __name__ == '__main__': main()
