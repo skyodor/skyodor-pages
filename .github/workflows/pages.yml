@@ -24,6 +24,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: astro/package.json
       - name: Install dependencies
         run: python -m pip install requests beautifulsoup4
       - name: Build current site baseline
@@ -42,7 +48,16 @@ jobs:
             fi
           done
           cp -a site/v01/. site/v02/
-          python scripts/build_v03.py
+      - name: Prepare Astro content snapshot
+        run: python scripts/prepare_astro_content.py
+      - name: Build Astro v03 foundation
+        working-directory: astro
+        run: npm install --no-package-lock && npm run build
+      - name: Build current v03 compatibility layer
+        run: python scripts/build_v03.py
+      - name: Add root redirect
+        shell: bash
+        run: |
           cat > site/index.html <<'EOF'
           <!doctype html>
           <html lang="en">
