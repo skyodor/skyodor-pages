@@ -1,11 +1,16 @@
 # Skyodor Pages
 
-This repository builds a static copy of [skyodor.com](https://www.skyodor.com/) and deploys it to GitHub Pages.
+This repository builds a static copy of [skyodor.com](https://www.skyodor.com/) and deploys it to **Cloudflare Pages**.
 
-## Deployment
+## Cloudflare setup
 
-Pushes to `main` trigger `.github/workflows/pages.yml`. The workflow crawls the source site, rewrites same-origin links and assets to local paths, and deploys the generated `site/` directory.
+The GitHub Actions workflow runs on pushes to `main` and deploys the generated `site/` directory to the Cloudflare Pages project named `skyodor-pages`.
 
-If deployment is blocked, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
+Add these repository secrets in **GitHub → Settings → Secrets and variables → Actions**:
+
+- `CLOUDFLARE_API_TOKEN`: Cloudflare API token with Pages deployment permissions.
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID.
+
+Create the Cloudflare Pages project first, using the project name `skyodor-pages`. The workflow is in `.github/workflows/cloudflare-pages.yml`.
 
 > Note: pages that depend on server-side APIs, authentication, or dynamic JavaScript may require additional manual adaptation after the static build.
