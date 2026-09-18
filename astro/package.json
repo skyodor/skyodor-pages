@@ -1,0 +1,7 @@
+{
+  "name": "skyodor-astro-v03",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "astro build"},
+  "dependencies": {"astro": "^5.13.0"}
+}
