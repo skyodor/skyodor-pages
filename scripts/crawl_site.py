@@ -12,7 +12,7 @@ ALLOWED_HOSTS = {'www.skyodor.com', 'skyodor.com'}
 OUT = Path('site')
 TIMEOUT = 30
 session = requests.Session()
-session.headers['User-Agent'] = 'skyodor-static-builder/6.0'
+session.headers['User-Agent'] = 'skyodor-static-builder/6.1'
 seen_pages, asset_map, failed = set(), {}, set()
 
 def normalize(value, base=BASE_URL):
@@ -108,6 +108,8 @@ def clean_document(soup):
 
 def process(url):
     url=normalize(url); p=urlparse(url)
+    if '_blank' in [unquote(part).lower() for part in p.path.split('/') if part]:
+        return
     if url in seen_pages or p.netloc not in ALLOWED_HOSTS or p.path.lower().endswith(('.pdf','.zip')): return
     seen_pages.add(url)
     try: data, ctype=download(url)
@@ -136,6 +138,9 @@ def process(url):
         if node.string: node.string=rewrite_css(node.string,url,output)
     for node in soup.find_all('a',href=True):
         absolute=normalize(node['href'],url); target=urlparse(absolute)
+        if '_blank' in [unquote(part).lower() for part in target.path.split('/') if part]:
+            node['href']='#'
+            continue
         if target.netloc in ALLOWED_HOSTS and not target.path.lower().endswith(('.pdf','.zip','.jpg','.jpeg','.png','.gif','.webp','.svg','.css','.js')):
             node['href']=relative(output,safe_path(absolute)); process(absolute)
     clean_document(soup)
