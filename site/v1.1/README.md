@@ -2,26 +2,31 @@
 
 ## Release intent
 
-Version 1.1 introduces a new editorial homepage design while preserving the original crawled website content as an immutable reference set.
+Version 1.1 introduces a new editorial homepage design while preserving the original crawled website content as a reference set.
 
 ## Content lock
 
 - Original website snapshot is retained at `site/v1.1/legacy/`.
-- The legacy directory is linked to the existing `site/v0.1` Git tree, so the original files and assets remain available without rewriting them.
+- The legacy directory uses the existing v0.1 Git tree content; original files are not rewritten by the homepage redesign.
 - New presentation files are isolated at `site/v1.1/index.html` and `site/v1.1/styles.css`.
-- Existing product/detail pages remain accessible through the homepage links into `legacy/`.
-- No original v0.1 files are deleted or overwritten by this release.
+- Existing product/detail pages remain accessible through homepage links into `legacy/`.
+- New homepage copy is presentation text only; the legacy snapshot remains the source reference for original content.
 
-## Verification checklist
+## Verification and fixes
 
-- [x] v1.1 branch created from `main`.
+- [x] v1.1 branch exists.
 - [x] Original v0.1 tree preserved under `site/v1.1/legacy/`.
-- [x] Responsive homepage added.
-- [x] Original content routes linked from the new homepage.
-- [x] Styling isolated from the legacy crawl.
+- [x] Homepage and stylesheet are isolated from the legacy crawl.
+- [x] Homepage links point to legacy pages within the v1.1 tree.
+- [x] Added skip navigation link for keyboard users.
+- [x] Added visible focus styles for interactive elements.
+- [x] Added responsive grid safeguards for narrow screens.
+- [x] Added background-color fallbacks for image-backed sections.
+- [x] Added reduced-motion support.
+- [x] Added theme-color metadata.
 - [ ] Browser screenshot test in the deployment environment.
-- [ ] Final production domain cutover after stakeholder approval.
+- [ ] Production-domain cutover verification.
 
-## Scope note
+## Known scope limits
 
-This is a static v1.1 presentation layer. Checkout, inventory, forms, analytics, and SEO redirects should be verified separately before production cutover.
+This is a static v1.1 presentation layer. Checkout, inventory, forms, analytics, SEO redirects, and production-domain routing must be verified separately before cutover. The repository connector can verify committed source files and referenced paths, but it does not provide a browser rendering session here.
