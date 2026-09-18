@@ -47,16 +47,35 @@ jobs:
             <meta charset="utf-8">
             <meta http-equiv="refresh" content="0; url=v0.1/">
             <link rel="canonical" href="v0.1/">
+            <meta name="robots" content="noindex, nofollow, noarchive">
             <title>Skyodor</title>
           </head>
           <body><a href="v0.1/">Continue to Skyodor</a></body>
           </html>
           EOF
+      - name: Add noindex metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          for path in Path('site').rglob('*.html'):
+              soup = BeautifulSoup(path.read_text(encoding='utf-8', errors='replace'), 'html.parser')
+              head = soup.head or soup.insert(0, soup.new_tag('head'))
+              existing = head.find('meta', attrs={'name': 'robots'})
+              if existing:
+                  existing['content'] = 'noindex, nofollow, noarchive'
+              else:
+                  tag = soup.new_tag('meta', attrs={'name': 'robots', 'content': 'noindex, nofollow, noarchive'})
+                  head.insert(0, tag)
+              path.write_text(str(soup), encoding='utf-8')
+          PY
       - name: Validate versioned baseline
         shell: bash
         run: |
           test -f site/v0.1/index.html
           test -f site/index.html
+          test "$(grep -RIl 'name="robots"' site --include='*.html' | wc -l)" -gt 0
           ! grep -RIniE "weebly|weeblycloud|powered[[:space:]]+by[[:space:]]+weebly" site --include="*.html"
       - name: Configure Pages
         uses: actions/configure-pages@v5
