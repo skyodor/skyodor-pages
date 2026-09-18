@@ -28,6 +28,10 @@ jobs:
         run: python -m pip install requests beautifulsoup4
       - name: Build static site
         run: python scripts/crawl_site.py
+      - name: Remove residual Weebly branding
+        run: python scripts/clean_generated.py
+      - name: Validate generated site
+        run: '! grep -RIniE "weebly|weeblycloud|powered[[:space:]]+by[[:space:]]+weebly" site --include="*.html"'
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
