@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a resilient, GitHub-Pages-friendly static copy of skyodor.com."""
+"""Build a resilient offline copy of skyodor.com, including lazy-loaded and CSS assets."""
 from __future__ import annotations
 
 import hashlib
@@ -18,7 +18,7 @@ HOST = urlparse(BASE_URL).netloc
 OUT = Path("site")
 TIMEOUT = 30
 session = requests.Session()
-session.headers.update({"User-Agent": "skyodor-pages-static-builder/2.0"})
+session.headers.update({"User-Agent": "skyodor-pages-static-builder/3.0"})
 seen_pages: set[str] = set()
 asset_map: dict[str, str] = {}
 
@@ -33,7 +33,7 @@ def safe_path(url: str, default_name: str = "index.html") -> Path:
     raw = unquote(parsed.path).strip("/")
     if not raw:
         return Path(default_name)
-    parts = [part for part in raw.split("/") if part not in (".", "..")]
+    parts = [p for p in raw.split("/") if p not in (".", "..")]
     path = Path(*parts)
     if parsed.path.endswith("/"):
         return path / default_name
@@ -44,8 +44,8 @@ def asset_target(url: str, content_type: str = "") -> Path:
     parsed = urlparse(url)
     path = safe_path(url, "asset")
     if not path.suffix:
-        extension = mimetypes.guess_extension(content_type.split(";", 1)[0].strip()) or ".bin"
-        path = path.with_name(path.name + extension)
+        ext = mimetypes.guess_extension(content_type.split(";", 1)[0].strip()) or ".bin"
+        path = path.with_name(path.name + ext)
     if parsed.query:
         digest = hashlib.sha1(parsed.query.encode()).hexdigest()[:8]
         path = path.with_name(f"{path.stem}-{digest}{path.suffix}")
@@ -72,24 +72,45 @@ def save_asset(url: str, data: bytes | None = None, content_type: str = "") -> s
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(data)
     asset_map[url] = target.as_posix()
-    if "css" in content_type or target.suffix.lower() == ".css":
-        css = data.decode("utf-8", errors="replace")
-        destination.write_text(rewrite_css(css, url, target), encoding="utf-8")
+    if "css" in content_type.lower() or target.suffix.lower() == ".css":
+        destination.write_text(rewrite_css(data.decode("utf-8", errors="replace"), url, target), encoding="utf-8")
     return target.as_posix()
 
 
 def rewrite_css(text: str, source_url: str, source_file: Path) -> str:
     def replace(match: re.Match[str]) -> str:
         raw = match.group(1).strip().strip("'\"")
-        if raw.startswith(("data:", "#")):
+        if raw.startswith(("data:", "#", "http://", "https://")) and not raw.startswith(("http://", "https://")):
             return match.group(0)
-        absolute = normalize(urljoin(source_url, raw))
         try:
+            absolute = normalize(urljoin(source_url, raw))
             saved = save_asset(absolute)
             return match.group(0).replace(raw, relative(source_file, saved))
         except requests.RequestException:
+            print(f"Asset unavailable in CSS: {absolute}")
             return match.group(0)
     return re.sub(r"url\(([^)]+)\)", replace, text, flags=re.I)
+
+
+def save_reference(raw: str, page_url: str, output: Path) -> str | None:
+    if not raw or raw.strip().startswith(("data:", "mailto:", "javascript:", "#")):
+        return None
+    absolute = normalize(urljoin(page_url, raw.strip()))
+    try:
+        return relative(output, save_asset(absolute))
+    except requests.RequestException:
+        print(f"Asset unavailable: {absolute}")
+        return None
+
+
+def rewrite_inline_style(value: str, page_url: str, output: Path) -> str:
+    def replace(match: re.Match[str]) -> str:
+        raw = match.group(1).strip().strip("'\"")
+        if raw.startswith(("data:", "#")):
+            return match.group(0)
+        saved = save_reference(raw, page_url, output)
+        return match.group(0).replace(raw, saved) if saved else match.group(0)
+    return re.sub(r"url\(([^)]+)\)", replace, value, flags=re.I)
 
 
 def process_page(url: str) -> None:
@@ -108,38 +129,42 @@ def process_page(url: str) -> None:
 
     output = safe_path(url)
     soup = BeautifulSoup(data, "html.parser")
-    for tag, attr in (("img", "src"), ("script", "src"), ("link", "href"), ("source", "src")):
-        for node in soup.find_all(tag):
+
+    # Capture normal, lazy-loaded, responsive, poster, and data-* image references.
+    asset_attrs = ("src", "href", "poster", "data-src", "data-lazy-src", "data-original", "data-bg", "data-background-image")
+    for node in soup.find_all(True):
+        for attr in asset_attrs:
             raw = node.get(attr)
-            if not raw or raw.startswith(("data:", "mailto:", "javascript:", "#")):
-                continue
-            absolute = normalize(urljoin(url, raw))
-            # Assets may be hosted on a CDN; download them too.
-            if tag == "link" and node.get("rel") and "stylesheet" not in node.get("rel"):
-                continue
-            try:
-                saved = save_asset(absolute)
-                node[attr] = relative(output, saved)
-            except requests.RequestException:
-                print(f"Asset unavailable: {absolute}")
+            if raw and not (attr == "href" and node.name == "a"):
+                saved = save_reference(raw, url, output)
+                if saved:
+                    node[attr] = saved
+        if node.get("style"):
+            node["style"] = rewrite_inline_style(node["style"], url, output)
 
     for node in soup.find_all(srcset=True):
-        values = []
+        rewritten = []
         for item in node["srcset"].split(","):
             bits = item.strip().split()
-            if not bits:
-                continue
-            absolute = normalize(urljoin(url, bits[0]))
-            try:
-                bits[0] = relative(output, save_asset(absolute))
-            except requests.RequestException:
-                pass
-            values.append(" ".join(bits))
-        node["srcset"] = ", ".join(values)
+            if bits:
+                saved = save_reference(bits[0], url, output)
+                if saved:
+                    bits[0] = saved
+                rewritten.append(" ".join(bits))
+        node["srcset"] = ", ".join(rewritten)
 
+    # Rewrite CSS and other external resources referenced in link tags.
+    for node in soup.find_all("link", href=True):
+        if node.get("rel") and "stylesheet" in node.get("rel"):
+            saved = save_reference(node["href"], url, output)
+            if saved:
+                node["href"] = saved
+
+    # Rewrite internal navigation and recursively crawl linked pages.
     for node in soup.find_all(href=True):
         absolute = normalize(urljoin(url, node["href"]))
-        if urlparse(absolute).netloc == HOST and not urlparse(absolute).path.lower().endswith((".pdf", ".zip")):
+        target = urlparse(absolute)
+        if target.netloc == HOST and not target.path.lower().endswith((".pdf", ".zip", ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".css", ".js")):
             node["href"] = relative(output, safe_path(absolute))
             process_page(absolute)
 
