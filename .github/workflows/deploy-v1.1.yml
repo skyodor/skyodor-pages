@@ -21,20 +21,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Publish repository with v1.1 under site/v1.1
+      - name: Publish v1.1 under /v1.1
         shell: bash
         run: |
           set -euo pipefail
           tmp_dir="$(mktemp -d)"
-          cp -a . "$tmp_dir/"
-          rm -rf "$tmp_dir/.git"
+          mkdir -p "$tmp_dir/v1.1"
+          cp -a site/v1.1/. "$tmp_dir/v1.1/"
           touch "$tmp_dir/.nojekyll"
           cd "$tmp_dir"
           git init
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Deploy repository with v1.1 path"
+          git commit -m "Deploy v1.1 under /v1.1"
           git branch -M gh-pages
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin gh-pages
