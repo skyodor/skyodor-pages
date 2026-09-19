@@ -7,17 +7,21 @@
     "The legacy Weebly capture exists under site/v1.1/legacy.",
     "The original v0.1 source tree remains available under site/v0.1.",
     "Homepage and stylesheet are separated from legacy files.",
+    "The legacy homepage and category.html are present and readable.",
+    "The legacy 30ml product page is present and readable; its source contains product names, prices, fragrance notes, and image references.",
     "Product and lifestyle page filenames are present in the legacy tree.",
     "Product metadata and image references were extracted from legacy HTML metadata.",
     "The content database uses explicit categories and source paths.",
-    "The v01-bk marker directory is present."
+    "The v01-bk marker directory is present.",
+    "A v01-bk branch already exists in the repository."
   ],
   "not_verified": [
     "Complete binary image-by-image existence audit",
     "Browser-rendered desktop screenshot review",
     "Browser-rendered mobile screenshot review",
     "Production-domain routing and cutover",
-    "Checkout, inventory, forms, and external social destinations"
+    "Checkout, inventory, forms, and external social destinations",
+    "Full source extraction for every legacy product and informational page"
   ],
   "constraints": [
     "Do not invent missing source text, prices, image alt text, or links.",
@@ -28,6 +32,7 @@
   "next_required_checks": [
     "Run the static validator against a local checkout of v1.1.",
     "Compare every HTML/CSS image reference against the captured asset tree.",
+    "Extract and verify every legacy page before replacing legacy-only links with redesigned routes.",
     "Open every redesigned route at desktop and mobile widths.",
     "Check keyboard focus, heading order, contrast, and broken links."
   ]
