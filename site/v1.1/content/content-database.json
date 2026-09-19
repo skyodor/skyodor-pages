@@ -1,0 +1,152 @@
+{
+  "schema": "odor-content-database/v1",
+  "project": "ODOR 蝶漾香韻",
+  "source": {
+    "url": "https://www.skyodor.com/",
+    "captured_on": "2026-09-19",
+    "method": "Weebly offline capture + legacy HTML metadata verification",
+    "scope": "Only source-backed content is recorded; unknown fields remain explicit."
+  },
+  "content_model": {
+    "page": ["id", "title", "category", "source_path", "canonical_url", "status"],
+    "item": ["id", "name", "type", "price", "description", "specifications", "images", "source_page"],
+    "media": ["path", "role", "source_page", "verification"],
+    "taxonomy": ["brand", "product", "lifestyle", "how_to_buy", "craft", "uncategorized"]
+  },
+  "pages": [
+    {
+      "id": "home",
+      "title": "蝶漾香韻",
+      "category": "brand",
+      "source_path": "site/v0.1/index.html",
+      "canonical_url": "https://www.skyodor.com/",
+      "status": "offline-capture-present"
+    },
+    {
+      "id": "perfume-30ml",
+      "title": "沉香精油香水30ml",
+      "category": "product",
+      "source_path": "site/v0.1/27785393213193427833393212770030ml.html",
+      "canonical_url": "https://www.skyodor.com/27785393213193427833393212770030ml.html",
+      "status": "legacy-metadata-verified"
+    },
+    {
+      "id": "perfume-50mlx",
+      "title": "沉香精油香水50mlx",
+      "category": "product",
+      "source_path": "site/v0.1/27785393213193427833393212770050mlx.html",
+      "canonical_url": "https://www.skyodor.com/27785393213193427833393212770050mlx.html",
+      "status": "legacy-metadata-verified"
+    },
+    {
+      "id": "perfume-guansheng-50ml",
+      "title": "關聖帝君沉香50ml",
+      "category": "product",
+      "source_path": "site/v0.1/27785393213193427833393212770050ml.html",
+      "canonical_url": "https://www.skyodor.com/27785393213193427833393212770050ml.html",
+      "status": "legacy-metadata-verified"
+    },
+    {
+      "id": "incense-lifestyle",
+      "title": "品香生活",
+      "category": "lifestyle",
+      "source_path": "site/v0.1/21697393212998327963.html",
+      "canonical_url": "https://www.skyodor.com/21697393212998327963.html",
+      "status": "source-reader-and-offline-capture"
+    },
+    {
+      "id": "diffuser-wood",
+      "title": "擴香圖騰木片",
+      "category": "product",
+      "source_path": "site/v0.1/258443932122294394722640829255.html",
+      "canonical_url": "https://www.skyodor.com/258443932122294394722640829255.html",
+      "status": "legacy-metadata-verified"
+    },
+    {
+      "id": "how-to-buy",
+      "title": "購買流程",
+      "category": "how_to_buy",
+      "source_path": "site/v0.1/36092360232796931243.html",
+      "canonical_url": "https://www.skyodor.com/36092360232796931243.html",
+      "status": "legacy-metadata-verified"
+    }
+  ],
+  "items": [
+    {
+      "id": "item-30ml-c1",
+      "name": "NO.C1 皇室派對 30ml",
+      "type": "perfume",
+      "price": "$2450",
+      "description": "傳遞的不是故事 不是香味替代言語 是一個人給我的溫度 是我所認識的那個人 內在傳遞的訊息 單純是一個人的個性",
+      "specifications": [],
+      "images": [
+        "assets/uploads/1/2/8/6/128601763/391588720_orig.jpg",
+        "assets/uploads/1/2/8/6/128601763/yutacar-jkmnm3cincw-unsplash.jpg",
+        "assets/uploads/1/2/8/6/128601763/1244221102.jpg",
+        "assets/uploads/1/2/8/6/128601763/2087698222.jpg",
+        "assets/uploads/1/2/8/6/128601763/mohammad-alizade-dunskupql7g-unsplash.jpg",
+        "assets/uploads/1/2/8/6/128601763/chermiti-mohamed-gjvokrp-6yk-unsplash.jpg",
+        "assets/uploads/1/2/8/6/128601763/adult-black-and-white-concentration-1061130.jpg",
+        "assets/uploads/1/2/8/6/128601763/city-buildings-near-body-of-water-1449455.jpg",
+        "assets/uploads/1/2/8/6/128601763/s-207052814.jpg",
+        "assets/uploads/1/2/8/6/128601763/architecture-buildings-city-cityscape-366283.jpg"
+      ],
+      "source_page": "perfume-30ml"
+    },
+    {
+      "id": "item-guansheng-50ml",
+      "name": "關聖帝君沉香香水",
+      "type": "perfume",
+      "price": null,
+      "description": "關聖帝君沉香香水；原始頁面包含香氣特色與使用情境文字。",
+      "specifications": [
+        "前調：淡雅木質香",
+        "中調：沉香與檀香交織",
+        "後調：淡淡的草本與香草氣息"
+      ],
+      "images": [
+        "assets/uploads/1/2/8/6/128601763/s925108635605875943_p2_i2_w2854-bd7df091.jpeg",
+        "assets/uploads/1/2/8/6/128601763/s925108635605875943_p2_i3_w3024-bd7df091.jpeg"
+      ],
+      "source_page": "perfume-guansheng-50ml"
+    },
+    {
+      "id": "item-diffuser-wood",
+      "name": "擴香圖騰木片",
+      "type": "diffuser",
+      "price": null,
+      "description": "走進香氣融入生活，用香氣提升空間中的溫度，從視覺與嗅覺開啟一個有品質的環境，打造屬於自己舒心放鬆的氣味。",
+      "specifications": [],
+      "images": [
+        "assets/uploads/1/2/8/6/128601763/s-206217236_orig.jpg",
+        "assets/uploads/1/2/8/6/128601763/s-206217234_orig.jpg",
+        "assets/uploads/1/2/8/6/128601763/s-206217235_orig.jpg",
+        "assets/uploads/1/2/8/6/128601763/sky_orig.jpg"
+      ],
+      "source_page": "diffuser-wood"
+    }
+  ],
+  "homepage_sections": [
+    {"id": "brand-story", "heading": "蝶漾香韻", "category": "brand"},
+    {"id": "keynote", "heading": "基調", "category": "craft", "subject": "沉香"},
+    {"id": "core-value", "heading": "核心技術", "category": "craft", "subject": "合香與調香"},
+    {"id": "opening", "heading": "開闔方式", "category": "craft"},
+    {"id": "woodcraft", "heading": "木工工藝", "category": "craft"},
+    {"id": "camphor-story", "heading": "最深情的樟樹", "category": "brand"}
+  ],
+  "media_rules": {
+    "use_only_verified_paths": true,
+    "missing_alt_text": "must be reviewed from source HTML before final accessibility sign-off",
+    "remote_external_media": "do not hotlink in the redesigned site when a local captured asset exists"
+  },
+  "qa": {
+    "offline_baseline_branch": "v01-bk",
+    "redesign_branch": "v1.1",
+    "content_extraction": "in progress",
+    "asset_path_audit": "required",
+    "browser_screenshot_test": "required",
+    "mobile_test": "required",
+    "link_check": "required",
+    "no_invented_content": true
+  }
+}
