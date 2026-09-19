@@ -30,3 +30,7 @@ Version 1.1 introduces a new editorial homepage design while preserving the orig
 ## Known scope limits
 
 This is a static v1.1 presentation layer. Checkout, inventory, forms, analytics, SEO redirects, and production-domain routing must be verified separately before cutover. The repository connector can verify committed source files and referenced paths, but it does not provide a browser rendering session here.
+
+## Deployment check
+
+The v1.1 deployment workflow is the authoritative publishing path for this version and is triggered by changes on the `v1.1` branch.
