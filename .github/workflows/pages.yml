@@ -1,4 +1,4 @@
-name: Build and deploy GitHub Pages
+name: Deploy Skyodor v1.1 Live
 
 on:
   push:
@@ -15,108 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-          cache-dependency-path: astro/package.json
-      - name: Install dependencies
-        run: python -m pip install requests beautifulsoup4
-      - name: Build current site baseline
-        run: python scripts/crawl_site.py
-      - name: Clean generated baseline
-        run: python scripts/clean_generated.py
-      - name: Place baseline under version paths
-        shell: bash
-        run: |
-          mkdir -p site/v01 site/v02
-          shopt -s dotglob
-          for item in site/*; do
-            base="$(basename "$item")"
-            if [ "$base" != "v01" ] && [ "$base" != "v02" ]; then
-              mv "$item" site/v01/
-            fi
-          done
-          cp -a site/v01/. site/v02/
-      - name: Prepare Astro content snapshot
-        run: python scripts/prepare_astro_content.py
-      - name: Build Astro v03 foundation
-        working-directory: astro
-        run: npm install --no-package-lock && npm run build
-      - name: Build current v03 compatibility layer
-        run: python scripts/build_v03.py
-      - name: Add root redirect
-        shell: bash
-        run: |
-          cat > site/index.html <<'EOF'
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0; url=v03/">
-            <link rel="canonical" href="v03/">
-            <meta name="robots" content="noindex, nofollow, noarchive">
-            <title>Skyodor</title>
-          </head>
-          <body><a href="v03/">Continue to Skyodor v0.3</a></body>
-          </html>
-          EOF
-      - name: Add noindex metadata
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          from bs4 import BeautifulSoup
-          for path in Path('site').rglob('*.html'):
-              soup = BeautifulSoup(path.read_text(encoding='utf-8', errors='replace'), 'html.parser')
-              head = soup.head or soup.insert(0, soup.new_tag('head'))
-              existing = head.find('meta', attrs={'name': 'robots'})
-              if existing:
-                  existing['content'] = 'noindex, nofollow, noarchive'
-              else:
-                  tag = soup.new_tag('meta', attrs={'name': 'robots', 'content': 'noindex, nofollow, noarchive'})
-                  head.insert(0, tag)
-              path.write_text(str(soup), encoding='utf-8')
-          PY
-      - name: Repair image href references
-        run: python scripts/repair_image_hrefs.py
-      - name: Validate v02 assets and references
-        run: python scripts/validate_static_site.py site/v02
-      - name: Validate v03 assets and references
-        run: python scripts/validate_static_site.py site/v03
-      - name: Validate versioned baselines
-        shell: bash
-        run: |
-          test -f site/v01/index.html
-          test -f site/v02/index.html
-          test -f site/v03/index.html
-          test -f site/index.html
-          test "$(grep -RIl 'name=\"robots\"' site --include='*.html' | wc -l)" -gt 0
-          ! grep -RIniE "weebly|weeblycloud|powered[[:space:]]+by[[:space:]]+weebly" site --include="*.html"
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload v1.1 site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/v1.1
+
+      - name: Deploy v1.1
         id: deployment
         uses: actions/deploy-pages@v4
