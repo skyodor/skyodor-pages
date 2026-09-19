@@ -1,0 +1,41 @@
+name: Validate V1.2
+
+on:
+  push:
+    branches: [v1.2]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/v1.2/**'
+      - '.github/workflows/v1.2-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate V1.2 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s site/v1.2/index.html
+          test -s site/v1.2/styles.css
+          grep -q 'ODOR' site/v1.2/index.html
+          grep -q 'stylesheet' site/v1.2/index.html
+          python - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+
+          class Parser(HTMLParser):
+              pass
+
+          html = Path('site/v1.2/index.html').read_text(encoding='utf-8')
+          Parser().feed(html)
+          print('V1.2 HTML parsed successfully')
+          PY
