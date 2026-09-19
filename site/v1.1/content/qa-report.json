@@ -1,8 +1,8 @@
 {
   "project": "ODOR 蝶漾香韻",
   "version": "v1.1",
-  "review_date": "2026-09-19",
-  "review_mode": "repository-source review",
+  "review_date": "2026-09-20",
+  "review_mode": "repository-source and live endpoint check",
   "verified": [
     "The legacy Weebly capture exists under site/v1.1/legacy.",
     "The original v0.1 source tree remains available under site/v0.1.",
@@ -11,25 +11,30 @@
     "Product metadata and image references were extracted from legacy HTML metadata.",
     "The content database uses explicit categories and source paths.",
     "The v01-bk marker directory is present.",
-    "A source-backed v1.1 collection index exists at site/v1.1/collection.html."
+    "A source-backed v1.1 collection index exists at site/v1.1/collection.html.",
+    "The v1.1 homepage is retrievable from the GitHub raw content endpoint.",
+    "The v1.1 homepage routes to the redesigned product and information pages using relative paths."
   ],
   "not_verified": [
+    "The public GitHub Pages deployment could not be reached from the current execution environment, so HTTP status, rendered output, and deployed asset loading remain unverified.",
+    "The production domain could not be independently live-checked from the current execution environment.",
     "Complete binary image-by-image existence audit",
     "Browser-rendered desktop screenshot review",
     "Browser-rendered mobile screenshot review",
-    "Production-domain routing and cutover",
     "Checkout, inventory, forms, and external social destinations"
   ],
   "constraints": [
     "Do not invent missing source text, prices, image alt text, or links.",
     "Do not hotlink external media when a local captured asset exists.",
-    "Keep legacy files unchanged while redesigning v1.1."
+    "Keep legacy files unchanged while redesigning v1.1.",
+    "A successful GitHub raw-content fetch is not proof that GitHub Pages or the production domain is deployed correctly."
   ],
   "release_status": "in_progress",
   "next_required_checks": [
     "Run the static validator against a local checkout of v1.1.",
     "Compare every HTML/CSS image reference against the captured asset tree.",
-    "Open every redesigned route at desktop and mobile widths.",
-    "Check keyboard focus, heading order, contrast, and broken links."
+    "Open every redesigned route at desktop and mobile widths in a browser-capable environment.",
+    "Check keyboard focus, heading order, contrast, and broken links.",
+    "Repeat the public deployment HTTP and browser check from an environment with network DNS access."
   ]
 }
