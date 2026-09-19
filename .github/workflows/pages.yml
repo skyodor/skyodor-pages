@@ -1,4 +1,4 @@
-name: Deploy Skyodor v1.1 Live
+name: Deploy Skyodor v1.2 Live
 
 on:
   push:
@@ -24,22 +24,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare /v1.1 site
+      - name: Prepare versioned sites
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p deploy/v1.1
+          mkdir -p deploy/v1.1 deploy/v1.2
           cp -a site/v1.1/. deploy/v1.1/
+          cp -a site/v1.2/. deploy/v1.2/
           touch deploy/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload /v1.1 site
+      - name: Upload versioned sites
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy
 
-      - name: Deploy /v1.1 site
+      - name: Deploy versioned sites
         id: deployment
         uses: actions/deploy-pages@v4
