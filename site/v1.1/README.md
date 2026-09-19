@@ -26,11 +26,13 @@ Version 1.1 introduces a new editorial homepage design while preserving the orig
 - [x] Added theme-color metadata.
 - [ ] Browser screenshot test in the deployment environment.
 - [ ] Production-domain cutover verification.
+- [ ] Complete binary image audit.
+- [ ] Checkout, inventory, forms, and external social destinations.
 
 ## Known scope limits
 
 This is a static v1.1 presentation layer. Checkout, inventory, forms, analytics, SEO redirects, and production-domain routing must be verified separately before cutover. The repository connector can verify committed source files and referenced paths, but it does not provide a browser rendering session here.
 
-## Deployment check
+## Deployment status
 
-The v1.1 deployment workflow is the authoritative publishing path for this version and is triggered by changes on the `v1.1` branch.
+The repository's existing Pages workflow is configured for the `main` branch and builds the existing versioned baseline/compatibility output. It does not currently publish the `v1.1` presentation tree automatically. The `gh-pages` branch currently contains a manually synchronized v1.1 homepage and stylesheet; public browser and HTTP verification remain pending because the execution environment cannot resolve the GitHub Pages host.
