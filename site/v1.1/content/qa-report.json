@@ -1,0 +1,34 @@
+{
+  "project": "ODOR 蝶漾香韻",
+  "version": "v1.1",
+  "review_date": "2026-09-19",
+  "review_mode": "repository-source review",
+  "verified": [
+    "The legacy Weebly capture exists under site/v1.1/legacy.",
+    "The original v0.1 source tree remains available under site/v0.1.",
+    "Homepage and stylesheet are separated from legacy files.",
+    "Product and lifestyle page filenames are present in the legacy tree.",
+    "Product metadata and image references were extracted from legacy HTML metadata.",
+    "The content database uses explicit categories and source paths.",
+    "The v01-bk marker directory is present."
+  ],
+  "not_verified": [
+    "Complete binary image-by-image existence audit",
+    "Browser-rendered desktop screenshot review",
+    "Browser-rendered mobile screenshot review",
+    "Production-domain routing and cutover",
+    "Checkout, inventory, forms, and external social destinations"
+  ],
+  "constraints": [
+    "Do not invent missing source text, prices, image alt text, or links.",
+    "Do not hotlink external media when a local captured asset exists.",
+    "Keep legacy files unchanged while redesigning v1.1."
+  ],
+  "release_status": "in_progress",
+  "next_required_checks": [
+    "Run the static validator against a local checkout of v1.1.",
+    "Compare every HTML/CSS image reference against the captured asset tree.",
+    "Open every redesigned route at desktop and mobile widths.",
+    "Check keyboard focus, heading order, contrast, and broken links."
+  ]
+}
