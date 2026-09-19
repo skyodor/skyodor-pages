@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "url": "https://www.skyodor.com/",
+    "captured_on": "2026-09-19",
+    "method": "web-readable source extraction",
+    "status": "partial_verified",
+    "note": "Only content returned by the source reader is included. Pages that failed retrieval are listed as pending and are not invented."
+  },
+  "brand": {
+    "name": "ODOR 蝶漾香韻",
+    "title": "蝶漾香韻"
+  },
+  "navigation": [
+    {"label": "蝶漾香韻", "url": "/"},
+    {"label": "沉香精油香水30ml", "url": "/27785393213193427833393212770030ml.html", "verification": "source-listed; page retrieval failed"},
+    {"label": "沉香精油香水50mlx", "url": "/27785393213193427833393212770050mlx.html", "verification": "source-listed; page retrieval failed"},
+    {"label": "沉香精油香水50ml", "url": "/27785393213193427833393212770050ml.html", "verification": "source-listed; page retrieval failed"},
+    {"label": "品香生活", "url": "/21697393212998327963.html", "verification": "verified"},
+    {"label": "擴香圖騰木片", "url": "/258443932122294394722640829255.html", "verification": "source-listed; page retrieval failed"},
+    {"label": "購買流程", "url": "/36092360232796931243.html", "verification": "source-listed; page retrieval failed"},
+    {"label": "FACEBOOK", "external": true, "verification": "source-listed"},
+    {"label": "Category", "verification": "source-listed; target URL not exposed by source reader"}
+  ],
+  "homepage": {
+    "sections": [
+      {
+        "heading": "蝶漾香韻",
+        "english_heading": "ODOR",
+        "body": "剎那與永恆\n我們總是對於剎那間會消失的，抱持一種特有的感情，想要留住也害怕失去，也之所以會更珍惜，而花便是古時詩人寄情與此的典型代表，它可豔麗、可清新、可哀傷、可短暫，一如我們所要表達的氣味，而蝶之守護也讓我們記住也留住瞬間的永恆。"
+      },
+      {
+        "heading": "基調",
+        "english_heading": "KEYNOTE",
+        "body": "沉香\n經由沉香木遭逢傷痛而自行治癒、生香與木寂，歷經千年以上過程，而香氣隨遭受的天然傷害、氣候等不同產生各自獨特的味道，並非隨處容易取得，「花氣無邊熏欲醉，靈芬一點靜還通」正是我們香水注入靈性的獨特之處，它更能隨著時間，體現不同層次的味道，也是我們香水特殊的地方。"
+      },
+      {
+        "heading": "核心技術",
+        "english_heading": "CORE VALUE",
+        "body": "合香與調香\n合香正是以不同的沉香木比例調製出不同的沉香氣味，合香過程極為不易，再將完成的沉香香氣進行與其他不同植物香氣精油進行調和，呈現自然多層次感的味道。"
+      },
+      {
+        "heading": "開闔方式",
+        "body": "三角形LOGO鈕扣右推打開，左推闔上。"
+      },
+      {
+        "heading": "木工工藝",
+        "body": "由蝶漾香韻調香師親自監修設計，以木工工藝中難度極高的曲木技法，將一片樟木利用切割紋路的方式彎曲木頭纖維，\n做到可以重複開闔的書本樣式。"
+      },
+      {
+        "heading": "最深情的樟樹",
+        "body": "樟木是最深情的木種，在江南古時大戶人家如有女嬰出生，父母便會種植一棵香樟樹。\n此樟樹便會與女孩一同成長，帶到出嫁之時便會用此樟樹做成箱子裝著嫁妝還有父母不捨的愛與女兒一同出嫁。"
+      }
+    ],
+    "image_references": [
+      {"source_reader_id": 11, "alt": "Picture"},
+      {"source_reader_id": 12, "alt": "Picture"},
+      {"source_reader_id": 13, "alt": "Picture"},
+      {"source_reader_id": 14, "alt": "Picture"},
+      {"source_reader_id": 15, "alt": "Picture"},
+      {"source_reader_id": 16, "alt": "Picture"}
+    ],
+    "external_links": [
+      {"label": "yongdelaos.com", "verification": "source-listed"}
+    ]
+  },
+  "pages": [
+    {
+      "title": "品香生活",
+      "url": "/21697393212998327963.html",
+      "status": "verified",
+      "sections": [
+        {
+          "heading": "逸品 立臥沉香",
+          "price": "$3,600",
+          "body": "平價 品過此香會深深愛上它。\n不一定要花很多錢，也能讓拜拜香有臥香的品質，品香與儀式之間有了完美平衡。\n與心靈一來一往的對話中，察覺人們在生活中該處於什麼樣的位置，才會是彼此最舒服的方式。虔敬看待，誠心祝禱，福至將來。\n〖祈禱與香同樣迷人，於是我們將兩者合而為一〗\n臥香單純的原料與製程，保留了大部分香的原始純淨風味，利用低溫點燃所帶出柔軟香甜的味道層次，是許多品香愛好者所喜歡的使用方式。品香是其中讓心靈沉靜下來的理想方法，越來越多人加入了日常品香的行列，使我們想起若同時使用祭祀用的立香，立香較強烈的燻氣會稍微破壞了品香時的體驗，如果居家祭祀不使用那麼多傳統立香的情況之下，只需要簡單的儀式，那麼我們將臥香加上了無染劑的香腳，也就更能夠符合現代人居家環保祭祀的需求，讓品香與儀式之間有了完美平衡，巧妙融合出獨具一格的美感。\n在儀式中加上質感與講究，在品味裡體會謙虛、祈求與包容。\n規格：21公分加香腳、100克、250支左右。\n線香成分：惠安沉香、天然楠木粉、優質細香腳\n香氣特色：輕鬆、蜜甜、高雅、優雅、草原、淡雅花奶香、全來自天然沉香粉末合香製作 絕對不添加香精、助燃劑。低價位中的極品！\n適合客廳 臥室 品茶 花藝品香靜地 安神 潔淨磁場。\n品過非常高階的沉香嗎？沒有拜拜的味道，是花 草 奶 蜜 果香天然水沉沉香。"
+        },
+        {
+          "heading": "韻品 沉香禮盒",
+          "price": "$2,880",
+          "body": "香味是形塑生活空間質感的重要元素之一，往往因此使用到各式各樣的香料，而沉香是眾香料中最為頂級的。中國古時流傳於皇室，或王公貴族階級，如今在民間也能夠一品沉香獨特、沉穩的香氣。\n「南台靜坐一爐香，終日凝然萬慮亡。不是息心除妄想，只緣無事可思量。」焚香能使心沉靜或幫助進入禪定。在供香時，我們不妨將身心沈靜下來，讓香成為我們與佛菩薩之間，最寂靜深秘的交會。\n品名：越南芽莊、星洲沉香、印度老山\n規格：一片1.5小時，20片、共3罐\n盤香成分：沉香粉、檀香粉、天然楠木粉\n芽莊：甘甜花蜜帶點黃土香氣，非常貼近舒心不刺鼻。\n星洲：濃香滿溢、韻味醇厚，乳奶韻味、濃而不烈。\n印度老山：馥雅甜香感、韻味醇奶香，甜花奶香韻。"
+        },
+        {
+          "heading": "寰宇凝萃",
+          "subheading": "天然沉香純單方精油",
+          "price": "1ml $3,900元；3ml $10,900",
+          "body": "台灣SGS食品級認證\n美國農藥重金屬黴菌等雙重安全合格認證\n香韻多層次氣味濃郁\n香韻帶甘涼帶甜 略有草藥清香\n通氣化血 鎮靜 止痛 強化心藏 有助安定神經\n更有強心美名 安養睡眠 心靈安撫帶來平靜和昇華\n眾多宗教神聖聖品。"
+        }
+      ]
+    }
+  ],
+  "pending_verification": [
+    "/27785393213193427833393212770030ml.html",
+    "/27785393213193427833393212770050mlx.html",
+    "/27785393213193427833393212770050ml.html",
+    "/258443932122294394722640829255.html",
+    "/36092360232796931243.html",
+    "all source image URLs and alt text not exposed by the source reader"
+  ]
+}
