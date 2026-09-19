@@ -1,0 +1,43 @@
+{
+  "project": "ODOR 蝶漾香韻",
+  "version": "v1.1",
+  "checked_on": "2026-09-19",
+  "method": "GitHub repository source inspection",
+  "pages": [
+    {
+      "path": "legacy/index.html",
+      "status": "verified_readable",
+      "title": "蝶漾香韻",
+      "notes": "Contains original homepage metadata and local asset references."
+    },
+    {
+      "path": "legacy/category.html",
+      "status": "verified_readable",
+      "title": "蝶漾香韻大香",
+      "notes": "Contains source metadata for 戀玫瑰沉香香水 and local asset references."
+    },
+    {
+      "path": "legacy/27785393213193427833393212770030ml.html",
+      "status": "verified_readable",
+      "title": "沉香精油香水30ml",
+      "notes": "Source includes CITY and STYLE sections, product names, prices, fragrance notes, descriptions, and local image references."
+    },
+    {
+      "path": "legacy/27785393213193427833393212770050mlx.html",
+      "status": "verified_readable_metadata",
+      "title": "沉香精油香水50mlx",
+      "notes": "Title and image metadata verified; complete body extraction remains pending."
+    },
+    {
+      "path": "legacy/27785393213193427833393212770050ml.html",
+      "status": "verified_readable_metadata",
+      "title": "關聖帝君沉香50ml",
+      "notes": "Title and original description metadata verified; complete body extraction remains pending."
+    }
+  ],
+  "limitations": [
+    "This is not a binary asset existence audit.",
+    "No browser-rendered visual test was performed.",
+    "No source text was invented where extraction was incomplete."
+  ]
+}
