@@ -1,0 +1,1 @@
+Prototype removed. Future redesigns must use verified existing site content and original assets only.
