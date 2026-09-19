@@ -27,11 +27,11 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload v1.1 site
+      - name: Upload repository with v1.1 under site/v1.1
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site/v1.1
+          path: .
 
-      - name: Deploy v1.1
+      - name: Deploy repository
         id: deployment
         uses: actions/deploy-pages@v4
