@@ -1,4 +1,4 @@
-name: Deploy Skyodor v1.2 Live
+name: Deploy Skyodor versioned sites
 
 on:
   push:
@@ -28,9 +28,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p deploy/v1.1 deploy/v1.2
+          mkdir -p deploy/v1.1 deploy/v1.2 deploy/v03
           cp -a site/v1.1/. deploy/v1.1/
           cp -a site/v1.2/. deploy/v1.2/
+          cp -a site/v03/. deploy/v03/
           touch deploy/.nojekyll
 
       - name: Configure GitHub Pages
