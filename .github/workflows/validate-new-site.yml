@@ -31,6 +31,9 @@ jobs:
       - name: Validate new-site static rules
         run: python scripts/validate_new_site.py
 
+      - name: Build source asset manifest
+        run: python scripts/build_new_site_asset_manifest.py
+
       - name: Check required new-site files
         run: |
           test -f site/new/index.html
@@ -39,3 +42,4 @@ jobs:
           test -f site/new/content/CONTENT_LOCK.md
           test -f site/new/content/content-database.json
           test -f site/new/content/content-database.schema.json
+          test -f site/new/content/ASSET_MIGRATION_STATUS.md
