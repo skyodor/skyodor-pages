@@ -34,6 +34,19 @@ jobs:
       - name: Build source asset manifest
         run: python scripts/build_new_site_asset_manifest.py
 
+      - name: Report unresolved source image references
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('site/new/content/asset-manifest.json').read_text(encoding='utf-8'))
+          missing = [item for item in manifest['assets'] if not item['exists']]
+          print(f"Source image references: {manifest['asset_count']}")
+          print(f"Unresolved references: {len(missing)}")
+          for item in missing[:50]:
+              print(f"- {item['source_page']}: {item['reference']}")
+          PY
+
       - name: Check required new-site files
         run: |
           test -f site/new/index.html
