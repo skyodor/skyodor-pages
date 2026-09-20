@@ -20,10 +20,11 @@ fetch('content/inventory.json').then(r=>r.json()).then(data=>{
   const catalog=document.querySelector('#catalog'); catalog.replaceChildren();
   (data.products||[]).forEach(product=>{
     const card=document.createElement('article'); card.className='product';
-    const code=document.createElement('p'); code.className='eyebrow'; code.textContent=product.code;
-    const title=document.createElement('h2'); title.textContent=product.name;
+    const link=document.createElement('a'); link.href='product.html?code='+encodeURIComponent(product.code||''); link.className='product-link';
+    const code=document.createElement('p'); code.className='eyebrow'; code.textContent=product.code||'未提供';
+    const title=document.createElement('h2'); title.textContent=product.name||'未提供';
     const details=document.createElement('p'); details.textContent=[product.size, product.price_twd ? '$'+product.price_twd : ''].filter(Boolean).join(' · ');
-    card.append(code,title,details); catalog.append(card);
+    link.append(code,title,details); card.append(link); catalog.append(card);
   });
 }).catch(()=>{document.querySelector('#catalog').textContent='產品清單目前無法載入，請稍後再試。';});
 </script>
