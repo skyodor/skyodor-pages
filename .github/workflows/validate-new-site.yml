@@ -28,6 +28,9 @@ jobs:
       - name: Validate content database structure
         run: python scripts/validate_content_database.py
 
+      - name: Validate new-site static rules
+        run: python scripts/validate_new_site.py
+
       - name: Check required new-site files
         run: |
           test -f site/new/index.html
@@ -36,17 +39,3 @@ jobs:
           test -f site/new/content/CONTENT_LOCK.md
           test -f site/new/content/content-database.json
           test -f site/new/content/content-database.schema.json
-
-      - name: Check forbidden legacy-version navigation references
-        run: |
-          if grep -RInE 'site/v0\.1|site/v0\.2|site/v0\.3|/v1\.1|/v1\.2' site/new --exclude='*.md' --exclude='*.json'; then
-            echo 'Legacy-version references found in new site.'
-            exit 1
-          fi
-
-      - name: Check for ChatGPT branding or tracking parameters
-        run: |
-          if grep -RInEi 'chatgpt|openai\.com|utm_' site/new --exclude='*.md'; then
-            echo 'Forbidden branding or tracking reference found.'
-            exit 1
-          fi
