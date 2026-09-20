@@ -6,20 +6,25 @@
 <title>產品｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" aria-label="開啟選單">☰</button><nav><a href="index.html#about">品牌</a><a href="products.html" aria-current="page">產品</a><a href="index.html#materials">基調</a><a href="index.html#craft">工藝</a></nav></header>
+<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" aria-label="開啟選單" aria-expanded="false">☰</button><nav><a href="index.html#about">品牌</a><a href="products.html" aria-current="page">產品</a><a href="index.html#materials">基調</a><a href="index.html#craft">工藝</a></nav></header>
 <main>
-<section class="closing"><p class="eyebrow">THE COLLECTION</p><h1>香氣的<br><span>不同章節</span></h1><p>已核對的產品名稱、規格與價格如下；未核對的原始內容不自行補寫。</p></section>
-<section class="product-grid">
-<article class="product"><p class="eyebrow">NO.C1</p><h2>皇室派對</h2><p>30ml · $2450</p><p>香水 傳遞的不是故事 不是香味替代言語 是一個人給我的溫度 是我所認識的那個人 內在傳遞的訊息 單純是一個人的個性</p></article>
-<article class="product"><p class="eyebrow">NO.C2</p><h2>紐約那天</h2><p>30ml · $2450</p><p>人生無常 記得親一下 抱一下穿暖一些在出門 旅途平安</p><p>紐約</p></article>
-<article class="product"><p class="eyebrow">NO.C3</p><h2>偷心戀人</h2><p>30ml · $2450</p></article>
-<article class="product"><p class="eyebrow">NO.P9</p><h2>絕妙玫瑰</h2><p>$2450</p></article>
-<article class="product"><p class="eyebrow">NO.P10</p><h2>韶光</h2><p>$2450</p></article>
-<article class="product"><p class="eyebrow">NO.P11</p><h2>戀玫瑰</h2><p>$3200</p></article>
-<article class="product"><p class="eyebrow">NO.P12</p><h2>關聖帝君沉香香水</h2><p>50ml · $3000</p><p>安定靈魂 養護元神 護身避煞 常保平安 淨身淨地 穩定磁場 加強除穢 靈體防護</p></article>
-<article class="product"><p class="eyebrow">NO.P13</p><h2>王母娘娘聖露水</h2><p>50ml · $3900</p></article>
-</section>
+<section class="closing"><p class="eyebrow">THE COLLECTION</p><h1>香氣的<br><span>不同章節</span></h1><p>以下列出來源清單中已編錄的產品名稱、規格與價格。尚未核對的詳細描述與圖片不自行補寫。</p></section>
+<section class="product-grid" id="catalog" aria-live="polite"><p>正在載入產品清單……</p></section>
 </main>
 <footer><span>ODOR 蝶漾香韻</span><a href="index.html">返回首頁 ↗</a></footer>
-<script>const menu=document.querySelector('.menu');const nav=document.querySelector('nav');menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});</script>
+<script>
+const menu=document.querySelector('.menu');
+const nav=document.querySelector('nav');
+menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+fetch('content/inventory.json').then(r=>r.json()).then(data=>{
+  const catalog=document.querySelector('#catalog'); catalog.replaceChildren();
+  (data.products||[]).forEach(product=>{
+    const card=document.createElement('article'); card.className='product';
+    const code=document.createElement('p'); code.className='eyebrow'; code.textContent=product.code;
+    const title=document.createElement('h2'); title.textContent=product.name;
+    const details=document.createElement('p'); details.textContent=[product.size, product.price_twd ? '$'+product.price_twd : ''].filter(Boolean).join(' · ');
+    card.append(code,title,details); catalog.append(card);
+  });
+}).catch(()=>{document.querySelector('#catalog').textContent='產品清單目前無法載入，請稍後再試。';});
+</script>
 </body></html>
