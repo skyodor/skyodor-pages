@@ -1,0 +1,60 @@
+{
+  "source": {
+    "domain": "www.skyodor.com",
+    "baseline": "site/v0.1",
+    "inventory_status": "partial_verified",
+    "notes": [
+      "This file records source-backed items only.",
+      "Unknown source text is left empty rather than invented.",
+      "Legacy files remain untouched."
+    ]
+  },
+  "pages": [
+    {"path": "index.html", "type": "home", "title": "蝶漾香韻", "status": "source_identified"},
+    {"path": "category.html", "type": "category", "title": "蝶漾香韻大香", "status": "source_identified"},
+    {"path": "27785393213193427833393212770030ml.html", "type": "product", "title": "", "status": "needs_exact_text_extraction"},
+    {"path": "27785393213193427833393212770050ml.html", "type": "product", "title": "關聖帝君沉香50ml", "status": "source_identified"},
+    {"path": "27785393213193427833393212770050mlx.html", "type": "product", "title": "沉香精油香水50mlx", "status": "source_identified"},
+    {"path": "21697393212998327963.html", "type": "page", "title": "", "status": "needs_exact_text_extraction"},
+    {"path": "258443932122294394722640829255.html", "type": "page", "title": "", "status": "needs_exact_text_extraction"},
+    {"path": "36092360232796931243.html", "type": "page", "title": "", "status": "needs_exact_text_extraction"}
+  ],
+  "products": [
+    {"code": "NO.C1", "name": "皇室派對", "size": "30ml", "price_twd": 2450, "description": "香水 傳遞的不是故事 不是香味替代言語 是一個人給我的溫度 是我所認識的那個人 內在傳遞的訊息 單純是一個人的個性", "source_status": "verified_partial"},
+    {"code": "NO.C2", "name": "紐約那天", "size": "30ml", "price_twd": 2450, "description": "人生無常 記得親一下 抱一下穿暖一些在出門 旅途平安 紐約", "source_status": "verified_partial"},
+    {"code": "NO.C3", "name": "偷心戀人", "size": "30ml", "price_twd": 2450, "description": "", "source_status": "name_price_verified"},
+    {"code": "NO.P9", "name": "絕妙玫瑰", "size": "", "price_twd": 2450, "description": "", "source_status": "name_price_verified"},
+    {"code": "NO.P10", "name": "韶光", "size": "", "price_twd": 2450, "description": "", "source_status": "name_price_verified"},
+    {"code": "NO.P11", "name": "戀玫瑰", "size": "", "price_twd": 3200, "description": "", "source_status": "name_price_verified"},
+    {"code": "NO.P12", "name": "關聖帝君沉香香水", "size": "", "price_twd": 3000, "description": "安定靈魂 養護元神 護身避煞 常保平安 淨身淨地 穩定磁場 加強除穢 靈體防護", "source_status": "verified"},
+    {"code": "NO.P13", "name": "王母娘娘聖露水", "size": "50ml", "price_twd": 3900, "description": "", "source_status": "name_price_verified"}
+  ],
+  "verified_brand_content": {
+    "hero_title": "剎那與永恆",
+    "story": "我們總是對於剎那間會消失的，抱持一種特有的感情，想要留住也害怕失去，也之所以會更珍惜，而花便是古時詩人寄情與此的典型代表，它可豔麗、可清新、可哀傷、可短暫，一如我們所要表達的氣味，而蝶之守護也讓我們記住也留住瞬間的永恆。",
+    "keynote": "沉香",
+    "core_value": "合香與調香",
+    "opening": "三角形LOGO鈕扣右推打開，左推闔上。"
+  },
+  "assets": {
+    "known_home_images": [
+      "s-55033913.png",
+      "sanjoy-saha-hxwml-us3ao-unsplash_orig.jpg",
+      "editor/1477730715-291550d6.jpg",
+      "editor/297875202-24515900.jpg",
+      "s-204070959_orig.jpg",
+      "s-204070961_orig.jpg",
+      "image-1575936636-orig_orig.gif",
+      "bushcraft-dry-knife-wood-227577-orig_orig.jpg",
+      "654-orig_orig.jpg",
+      "sky_orig.jpg"
+    ],
+    "known_category_images": [
+      "s925108635605875943_c4_i1_w1156-bd7df091.jpeg",
+      "s925108635605875943_p2_i2_w2854-bd7df091.jpeg",
+      "s925108635605875943_p1_i1_w1156-bd7df091.jpeg",
+      "s925108635605875943_p3_i1_w1024-bd7df091.png"
+    ],
+    "status": "names_recorded_binary_copy_pending"
+  }
+}
