@@ -1,0 +1,52 @@
+name: Validate new site
+
+on:
+  push:
+    branches: [new-site-v1]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/new/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-new-site.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate content database structure
+        run: python scripts/validate_content_database.py
+
+      - name: Check required new-site files
+        run: |
+          test -f site/new/index.html
+          test -f site/new/products.html
+          test -f site/new/styles.css
+          test -f site/new/content/CONTENT_LOCK.md
+          test -f site/new/content/content-database.json
+          test -f site/new/content/content-database.schema.json
+
+      - name: Check forbidden legacy-version navigation references
+        run: |
+          if grep -RInE 'site/v0\.1|site/v0\.2|site/v0\.3|/v1\.1|/v1\.2' site/new --exclude='*.md' --exclude='*.json'; then
+            echo 'Legacy-version references found in new site.'
+            exit 1
+          fi
+
+      - name: Check for ChatGPT branding or tracking parameters
+        run: |
+          if grep -RInEi 'chatgpt|openai\.com|utm_' site/new --exclude='*.md'; then
+            echo 'Forbidden branding or tracking reference found.'
+            exit 1
+          fi
