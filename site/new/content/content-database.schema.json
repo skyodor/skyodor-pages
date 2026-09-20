@@ -7,6 +7,7 @@
   "properties": {
     "schema_version": {"type": "string"},
     "database_name": {"type": "string"},
+    "database_purpose": {"type": "string"},
     "locale": {"type": "string"},
     "currency": {"type": "string"},
     "source": {
@@ -21,11 +22,7 @@
       },
       "additionalProperties": true
     },
-    "data_contract": {
-      "type": "object",
-      "required": ["required_entity_fields", "verification_statuses", "publication_statuses", "null_policy", "id_policy"],
-      "additionalProperties": true
-    },
+    "data_contract": {"type": "object", "additionalProperties": true},
     "entities": {"type": "object", "additionalProperties": true},
     "relationships": {
       "type": "array",
@@ -40,11 +37,7 @@
         "additionalProperties": false
       }
     },
-    "quality_control": {
-      "type": "object",
-      "required": ["last_reviewed_at", "overall_status", "blocking_checks"],
-      "additionalProperties": true
-    }
+    "quality_control": {"type": "object", "additionalProperties": true}
   },
   "additionalProperties": false
 }
