@@ -16,11 +16,11 @@ for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in {".html", ".css", ".js"}:
         continue
     text = path.read_text(encoding="utf-8")
-    if re.search(r"chatgpt|openai\\.com|utm_", text, re.I):
+    if re.search(r"chatgpt|openai\.com|utm_", text, re.I):
         errors.append(f"forbidden branding/tracking reference: {path.relative_to(ROOT)}")
-    if re.search(r"site/v0\\.[123]|/v1\\.[12]", text):
+    if re.search(r"(?:site/)?v0\.[123]|/v1\.[12]|(?:^|[^a-z])v03(?:[^a-z]|$)", text, re.I):
         errors.append(f"legacy-version reference: {path.relative_to(ROOT)}")
-    if "href=\"#\"" in text or "src=\"#\"" in text:
+    if re.search(r'href=["\']#["\']|src=["\']#["\']', text, re.I):
         errors.append(f"empty placeholder link: {path.relative_to(ROOT)}")
 
 if errors:
