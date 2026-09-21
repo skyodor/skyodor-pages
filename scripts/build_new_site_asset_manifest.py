@@ -28,22 +28,23 @@ def main() -> int:
     parser.add_argument("--source", type=Path, default=Path("site/v0.1"))
     parser.add_argument("--output", type=Path, default=Path("site/new/content/asset-manifest.json"))
     args = parser.parse_args()
+    source_root = args.source.resolve()
 
     records = []
     for html in sorted(args.source.rglob("*.html")):
         text = html.read_text(encoding="utf-8", errors="replace")
         for raw in sorted(set(IMAGE_RE.findall(text))):
             ref = raw.split("?", 1)[0]
-            candidate = (html.parent / ref).resolve() if not ref.startswith("/") else (args.source / ref.lstrip("/")).resolve()
+            candidate = (html.parent / ref).resolve() if not ref.startswith("/") else (source_root / ref.lstrip("/")).resolve()
             try:
-                candidate.relative_to(args.source.resolve())
+                candidate.relative_to(source_root)
             except ValueError:
-                candidate = args.source / ref.lstrip("/")
-            item = {"source_page": html.relative_to(args.source).as_posix(), "reference": ref, "exists": candidate.is_file()}
+                candidate = (source_root / ref.lstrip("/")).resolve()
+            item = {"source_page": html.resolve().relative_to(source_root).as_posix(), "reference": ref, "exists": candidate.is_file()}
             if candidate.is_file():
                 item["bytes"] = candidate.stat().st_size
                 item["sha256"] = sha256(candidate)
-                item["path"] = candidate.relative_to(args.source).as_posix()
+                item["path"] = candidate.relative_to(source_root).as_posix()
             records.append(item)
 
     payload = {
