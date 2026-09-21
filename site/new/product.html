@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="蝶漾香韻產品資料｜ODOR">
+<title>產品資料｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" aria-label="開啟選單" aria-expanded="false">☰</button><nav><a href="index.html#about">品牌</a><a href="products.html">產品</a><a href="index.html#materials">基調</a><a href="index.html#craft">工藝</a></nav></header>
+<main><section class="closing" id="detail"><p class="eyebrow">PRODUCT DETAIL</p><h1>產品資料</h1><p>資料取自來源清單；未核對的欄位會保持未提供。</p></section></main>
+<footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回產品 ↗</a></footer>
+<script>
+const code=new URLSearchParams(location.search).get('code');
+const detail=document.querySelector('#detail');
+fetch('content/inventory.json').then(r=>r.json()).then(data=>{
+ const product=(data.products||[]).find(item=>item.code===code);
+ if(!product){detail.insertAdjacentHTML('beforeend','<p>找不到此產品代碼。</p>');return;}
+ const block=document.createElement('div');
+ const fields=[['產品代碼',product.code],['名稱',product.name],['規格',product.size],['價格',product.price_twd?'$'+product.price_twd:'未提供'],['描述',product.description||'尚未核對']];
+ fields.forEach(([label,value])=>{const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=label+'：';p.append(strong,document.createTextNode(value||'未提供'));block.append(p);});
+ detail.append(block);
+}).catch(()=>detail.insertAdjacentHTML('beforeend','<p>產品資料目前無法載入。</p>'));
+</script>
+</body></html>

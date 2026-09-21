@@ -1,0 +1,58 @@
+name: Validate new site
+
+on:
+  push:
+    branches: [new-site-v1]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/new/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-new-site.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate content database structure
+        run: python scripts/validate_content_database.py
+
+      - name: Validate new-site static rules
+        run: python scripts/validate_new_site.py
+
+      - name: Build source asset manifest
+        run: python scripts/build_new_site_asset_manifest.py
+
+      - name: Report unresolved source image references
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('site/new/content/asset-manifest.json').read_text(encoding='utf-8'))
+          missing = [item for item in manifest['assets'] if not item['exists']]
+          print(f"Source image references: {manifest['asset_count']}")
+          print(f"Unresolved references: {len(missing)}")
+          for item in missing[:50]:
+              print(f"- {item['source_page']}: {item['reference']}")
+          PY
+
+      - name: Check required new-site files
+        run: |
+          test -f site/new/index.html
+          test -f site/new/products.html
+          test -f site/new/styles.css
+          test -f site/new/content/CONTENT_LOCK.md
+          test -f site/new/content/content-database.json
+          test -f site/new/content/content-database.schema.json
+          test -f site/new/content/ASSET_MIGRATION_STATUS.md
