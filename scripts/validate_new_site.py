@@ -3,16 +3,37 @@
 from pathlib import Path
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
-import re, sys
+import json, re, sys
 
 ROOT = Path(__file__).resolve().parents[1] / "site" / "new"
 errors = []
 checked = 0
 
-required = ["index.html","about.html","products.html","lifestyle.html","category.html","purchase.html","product.html","styles.css"]
+required = [
+    "index.html","about.html","products.html","lifestyle.html","category.html",
+    "purchase.html","purchase-process.html","product.html","product-30ml.html",
+    "product-50ml.html","product-50mlx.html","diffuser-wood.html","styles.css",
+    "content/product-catalog.json","content/inventory.json"
+]
 for name in required:
     if not (ROOT / name).is_file():
         errors.append(f"missing required file: {name}")
+
+catalog_path = ROOT / "content" / "product-catalog.json"
+if catalog_path.is_file():
+    try:
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        products = catalog.get("products", [])
+        if len(products) < 40:
+            errors.append(f"product catalogue incomplete: {len(products)} records")
+        for product in products:
+            image = product.get("image")
+            if image:
+                checked += 1
+                if not (ROOT / image).resolve().exists():
+                    errors.append(f"catalog image missing: {product.get('code')} -> {image}")
+    except Exception as exc:
+        errors.append(f"invalid product catalogue JSON: {exc}")
 
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in {".html",".css",".js"}:
