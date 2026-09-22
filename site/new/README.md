@@ -1,20 +1,18 @@
 # ODOR 新網站
 
-## Current scope
+This directory is the standalone new-site implementation under `site/new`.
 
-This directory is the isolated new website implementation on branch `new-site-v1`. Legacy site files and earlier layouts remain untouched.
+## Completed in this migration pass
 
-## Owner action required
+- Original source asset tree is available under `site/new/assets/`.
+- Homepage uses verified source wording and original source imagery.
+- Unverified descriptive copy was removed from the brand page.
+- Responsive navigation and image sections are implemented without an external font/CDN dependency.
+- Local-reference validation is available through `scripts/validate_new_site.py`.
+- Legacy directories are not used as runtime dependencies by the new site.
 
-No action is required from the owner during the content, asset, and link verification phase.
+## Scope
 
-When the migration is ready for production, the owner will need to provide or confirm:
+The new site remains separate from the legacy versions. The existing `v03` files and build process are intentionally untouched.
 
-1. The preferred production deployment target (GitHub Pages or another host).
-2. DNS access for `www.skyodor.com`, if the domain will point to the new deployment.
-3. The intended order-processing destination and any required payment, shipping, or contact details that are not present in the archived source.
-4. Final approval for any source fields still marked `needs_review` or `unverified`.
-
-## Release rule
-
-The site must not be described as production-ready until source text, product data, image binaries, internal links, and deployment behavior have been verified. Unknown source values remain unfilled rather than being invented.
+Product/purchase presentation remains subject to the existing source-verification and publication rules; no missing source information is invented.
