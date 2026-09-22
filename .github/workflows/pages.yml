@@ -38,14 +38,18 @@ jobs:
       - name: Validate generated V03 site
         run: python scripts/validate_static_site.py site/v03
 
-      - name: Prepare versioned sites
+      - name: Validate standalone new site
+        run: python scripts/validate_new_site.py
+
+      - name: Prepare versioned and new sites
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p deploy/v1.1 deploy/v1.2 deploy/v03
+          mkdir -p deploy/v1.1 deploy/v1.2 deploy/v03 deploy/new
           cp -a site/v1.1/. deploy/v1.1/
           cp -a site/v1.2/. deploy/v1.2/
           cp -a site/v03/. deploy/v03/
+          cp -a site/new/. deploy/new/
           touch deploy/.nojekyll
 
       - name: Configure GitHub Pages
