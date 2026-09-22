@@ -13,7 +13,7 @@ required = [
     "index.html","about.html","products.html","lifestyle.html","category.html",
     "purchase.html","purchase-process.html","product.html","product-30ml.html",
     "product-50ml.html","product-50mlx.html","diffuser-wood.html","styles.css",
-    "content/product-catalog.json","content/inventory.json"
+    "content/product-catalog.json","content/product-50ml.json","content/inventory.json"
 ]
 for name in required:
     if not (ROOT / name).is_file():
@@ -26,6 +26,9 @@ if catalog_path.is_file():
         products = catalog.get("products", [])
         if len(products) < 40:
             errors.append(f"product catalogue incomplete: {len(products)} records")
+        sizes = {str(p.get("size")) for p in products}
+        if "30ml" not in sizes or "50ml" not in sizes:
+            errors.append("product catalogue must preserve both 30ml and 50ml records")
         for product in products:
             image = product.get("image")
             if image:
@@ -34,6 +37,23 @@ if catalog_path.is_file():
                     errors.append(f"catalog image missing: {product.get('code')} -> {image}")
     except Exception as exc:
         errors.append(f"invalid product catalogue JSON: {exc}")
+
+collection_50 = ROOT / "content" / "product-50ml.json"
+if collection_50.is_file():
+    try:
+        data50 = json.loads(collection_50.read_text(encoding="utf-8"))
+        products50 = data50.get("products", [])
+        if len(products50) < 4:
+            errors.append(f"50ml collection incomplete: {len(products50)} records")
+        for product in products50:
+            if product.get("size") != "50ml":
+                errors.append(f"non-50ml record in 50ml collection: {product.get('name')}")
+            for image in product.get("images", []) or []:
+                checked += 1
+                if not (ROOT / image).resolve().exists():
+                    errors.append(f"50ml image missing: {product.get('name')} -> {image}")
+    except Exception as exc:
+        errors.append(f"invalid 50ml catalogue JSON: {exc}")
 
 for path in ROOT.rglob("*"):
     if not path.is_file() or path.suffix.lower() not in {".html",".css",".js"}:
