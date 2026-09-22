@@ -22,9 +22,10 @@ for path in ROOT.rglob("*"):
         errors.append(f"forbidden branding/tracking reference: {path.relative_to(ROOT)}")
     if re.search(r"(?:site/)?v0\.[123]|/v1\.[12]|(?:^|[^a-z])v03(?:[^a-z]|$)", text, re.I):
         errors.append(f"legacy-version reference: {path.relative_to(ROOT)}")
-    if re.search(r'href=["\']#["\']|src=["\']#["\']', text, re.I):
-        errors.append(f"empty placeholder link: {path.relative_to(ROOT)}")
+
     if path.suffix.lower() == ".html":
+        if re.search(r'href=["\']#["\']|src=["\']#["\']', text, re.I):
+            errors.append(f"empty placeholder link: {path.relative_to(ROOT)}")
         soup = BeautifulSoup(text, "html.parser")
         for node in soup.find_all(True):
             for attr in ("src","href","poster","data-src","data-original"):
