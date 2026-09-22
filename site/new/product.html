@@ -2,23 +2,36 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="蝶漾香韻產品資料｜ODOR">
-<title>產品資料｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css">
+<meta name="description" content="ODOR 蝶漾香韻產品詳細資料。">
+<title>產品詳細資料｜ODOR 蝶漾香韻</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" aria-label="開啟選單" aria-expanded="false">☰</button><nav><a href="index.html#about">品牌</a><a href="products.html">產品</a><a href="index.html#materials">基調</a><a href="index.html#craft">工藝</a></nav></header>
-<main><section class="closing" id="detail"><p class="eyebrow">PRODUCT DETAIL</p><h1>產品資料</h1><p>資料取自來源清單；未核對的欄位會保持未提供。</p></section></main>
-<footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回產品 ↗</a></footer>
+<header class="site-header">
+<a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a>
+<button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button>
+<nav aria-label="主要導覽"><a href="index.html">首頁</a><a href="about.html">品牌與工藝</a><a href="products.html" aria-current="page">完整產品</a><a href="purchase-process.html">購買流程</a></nav>
+</header>
+<main id="detail" class="detail-page"></main>
+<footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回產品目錄 ↗</a></footer>
 <script>
-const code=new URLSearchParams(location.search).get('code');
-const detail=document.querySelector('#detail');
-fetch('content/inventory.json').then(r=>r.json()).then(data=>{
- const product=(data.products||[]).find(item=>item.code===code);
- if(!product){detail.insertAdjacentHTML('beforeend','<p>找不到此產品代碼。</p>');return;}
- const block=document.createElement('div');
- const fields=[['產品代碼',product.code],['名稱',product.name],['規格',product.size],['價格',product.price_twd?'$'+product.price_twd:'未提供'],['描述',product.description||'尚未核對']];
- fields.forEach(([label,value])=>{const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=label+'：';p.append(strong,document.createTextNode(value||'未提供'));block.append(p);});
- detail.append(block);
-}).catch(()=>detail.insertAdjacentHTML('beforeend','<p>產品資料目前無法載入。</p>'));
+const menu=document.querySelector('.menu'),nav=document.querySelector('nav');
+menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+const q=new URLSearchParams(location.search),code=q.get('code'),name=q.get('name');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('content/product-catalog.json').then(r=>r.json()).then(d=>{
+ const p=(d.products||[]).find(x=>x.code===code && (!name||x.name===name)) || (d.products||[]).find(x=>x.code===code);
+ if(!p){document.querySelector('#detail').innerHTML='<section class="page-intro"><p class="eyebrow">PRODUCT</p><h1>找不到產品</h1><a class="cta" href="products.html">返回產品目錄 ↗</a></section>';return;}
+ const image=p.image?'<img src="'+esc(p.image)+'" alt="'+esc(p.name)+'">':'<div class="detail-placeholder">'+esc((p.code||'').replace('NO.',''))+'</div>';
+ document.title=p.name+'｜ODOR 蝶漾香韻';
+ document.querySelector('#detail').innerHTML=
+ '<section class="detail-hero"><div class="detail-image">'+image+'</div><div class="detail-copy">'+
+ '<p class="eyebrow">'+esc(p.code)+'</p><h1>'+esc(p.name)+'</h1>'+
+ '<p class="detail-price">'+esc(p.size||'')+(p.price_twd!=null?'　NT$'+esc(p.price_twd):'')+'</p>'+
+ (p.notes?'<div class="detail-section"><span class="eyebrow">SOURCE NOTES</span><p>'+esc(p.notes)+'</p></div>':'')+
+ '<div class="detail-section"><span class="eyebrow">SOURCE</span><p>資料來源：已核對的 Skyodor 30ml 產品頁。</p></div>'+
+ '<a class="cta" href="products.html">瀏覽全部產品 <span>↗</span></a></div></section>';
+}).catch(()=>{document.querySelector('#detail').innerHTML='<section class="page-intro"><h1>產品資料無法載入</h1></section>';});
 </script>
-</body></html>
+</body>
+</html>
