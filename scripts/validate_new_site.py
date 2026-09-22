@@ -27,8 +27,8 @@ if catalog_path.is_file():
         if len(products) < 40:
             errors.append(f"product catalogue incomplete: {len(products)} records")
         sizes = {str(p.get("size")) for p in products}
-        if "30ml" not in sizes or "50ml" not in sizes:
-            errors.append("product catalogue must preserve both 30ml and 50ml records")
+        if sizes != {"30ml"}:
+            errors.append(f"30ml catalogue contains unexpected sizes: {sorted(sizes)}")
         for product in products:
             image = product.get("image")
             if image:
