@@ -29,19 +29,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install build dependency
-        run: python -m pip install beautifulsoup4
-
-      - name: Build complete V03 site from locked source
-        run: python scripts/build_v03_complete.py
-
-      - name: Validate generated V03 site
-        run: python scripts/validate_static_site.py site/v03
-
       - name: Validate standalone new site
         run: python scripts/validate_new_site.py
 
-      - name: Prepare versioned and new sites
+      - name: Prepare existing versioned sites and new site
         shell: bash
         run: |
           set -euo pipefail
@@ -55,11 +46,11 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload versioned sites
+      - name: Upload sites
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy
 
-      - name: Deploy versioned sites
+      - name: Deploy sites
         id: deployment
         uses: actions/deploy-pages@v4
