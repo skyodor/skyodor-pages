@@ -40,6 +40,23 @@ jobs:
             exit 1
           fi
 
+      - name: Verify v2.1 referenced assets
+        run: |
+          python scripts/build_new_site_asset_manifest.py --source site/v21 --output /tmp/v21-asset-manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('/tmp/v21-asset-manifest.json').read_text(encoding='utf-8'))
+          missing = [item for item in manifest['assets'] if not item['exists']]
+          print(f"v2.1 source image references: {manifest['asset_count']}")
+          print(f"v2.1 unresolved image references: {len(missing)}")
+          if missing:
+              for item in missing:
+                  print(f"- {item['source_page']}: {item['reference']}")
+              raise SystemExit('ERROR: v2.1 has unresolved image references')
+          print('v2.1 source asset existence + SHA-256 verification: PASS')
+          PY
+
       - name: Validate legacy new site
         run: python scripts/validate_new_site.py
 
@@ -60,6 +77,23 @@ jobs:
 
       - name: Validate generated v2.1 deployment tree
         run: python scripts/validate_static_site.py deploy/v21
+
+      - name: Verify generated v2.1 referenced assets
+        run: |
+          python scripts/build_new_site_asset_manifest.py --source deploy/v21 --output /tmp/deploy-v21-asset-manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('/tmp/deploy-v21-asset-manifest.json').read_text(encoding='utf-8'))
+          missing = [item for item in manifest['assets'] if not item['exists']]
+          print(f"generated v2.1 image references: {manifest['asset_count']}")
+          print(f"generated v2.1 unresolved image references: {len(missing)}")
+          if missing:
+              for item in missing:
+                  print(f"- {item['source_page']}: {item['reference']}")
+              raise SystemExit('ERROR: generated v2.1 has unresolved image references')
+          print('generated v2.1 asset existence + SHA-256 verification: PASS')
+          PY
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
