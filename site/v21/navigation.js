@@ -1,11 +1,26 @@
 (() => {
   const nav = document.querySelector('.site-header nav');
-  if (!nav) return;
   const scriptSrc = document.currentScript?.getAttribute('src') || 'navigation.js';
   const depth = (scriptSrc.match(/\.\.\//g) || []).length;
   const root = '../'.repeat(depth);
   const current = location.pathname.split('/').pop() || 'index.html';
   const href = file => `${root}${file}`;
+
+  // Canonical site branding: SKYODOR / 蝶漾香韻.
+  const applyBrand = () => {
+    document.querySelectorAll('.brand strong').forEach(el => { el.textContent = 'SKYODOR'; });
+    document.querySelectorAll('.brand').forEach(el => el.setAttribute('aria-label', 'SKYODOR 蝶漾香韻'));
+    document.querySelectorAll('footer span, .product-placeholder, .detail-placeholder').forEach(el => {
+      if (el.textContent.trim() === 'ODOR') el.textContent = 'SKYODOR';
+    });
+    if (document.title.includes('ODOR')) document.title = document.title.replaceAll('ODOR', 'SKYODOR');
+    document.querySelectorAll('meta[name="description"]').forEach(el => {
+      if (el.content.includes('ODOR')) el.content = el.content.replaceAll('ODOR', 'SKYODOR');
+    });
+  };
+  applyBrand();
+
+  if (!nav) return;
   nav.innerHTML = `
     <a href="${href('index.html')}"${current === 'index.html' ? ' aria-current="page"' : ''}>首頁</a>
     <a href="${href('about.html')}"${current === 'about.html' ? ' aria-current="page"' : ''}>品牌與工藝</a>
