@@ -11,19 +11,22 @@ const menu=document.querySelector('.menu'),nav=document.querySelector('nav');men
 const q=new URLSearchParams(location.search),id=q.get('id'),code=q.get('code'),name=q.get('name'),size=q.get('size');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nl=s=>esc(s).replace(/\n/g,'<br>');
-function render(p,collection){
- if(!p){document.querySelector('#detail').innerHTML='<section class="page-intro"><p class="eyebrow">PRODUCT</p><h1>找不到產品</h1><a class="cta" href="products.html">返回產品系列 ↗</a></section>';return;}
+function render(p,collection,copy){
+ if(!p){document.querySelector('#detail').innerHTML='<section class="page-intro"><p class="kicker">PRODUCT</p><h1>找不到產品</h1><a class="button button-dark" href="products.html">返回產品系列 ↗</a></section>';return;}
  document.title=p.name+'｜ODOR 蝶漾香韻';
  const images=collection==='50ml'?(p.images||[]):(p.image?[p.image]:[]);
  const gallery=images.length?'<div class="detail-gallery">'+images.map(src=>'<img src="'+esc(src)+'" alt="'+esc(p.name)+'">').join('')+'</div>':'<div class="detail-placeholder">ODOR</div>';
  const price=p.price_twd!=null?'<p class="detail-price">'+esc(p.size||'')+'　NT$'+esc(p.price_twd)+(p.list_price_twd?'<span class="detail-list-price">NT$'+esc(p.list_price_twd)+'</span>':'')+'</p>':'';
- document.querySelector('#detail').innerHTML='<section class="detail-hero"><div class="detail-image">'+gallery+'</div><div class="detail-copy"><p class="eyebrow">'+esc(p.code||p.size||'PRODUCT')+'</p><h1>'+esc(p.name)+'</h1>'+price+(p.notes?'<div class="detail-section"><span class="eyebrow">香氣與產品資料</span><p>'+nl(p.notes)+'</p></div>':'')+'<div class="detail-section"><span class="eyebrow">資料來源</span><p>來源頁：'+esc(p.source||'已核對的 Skyodor 產品資料')+'</p></div><a class="cta" href="'+(collection==='50ml'?'product-50ml.html':'product-30ml.html')+'">返回 '+esc(collection)+' 系列 <span>↗</span></a></div></section>';
+ const description=copy?.description||p.notes||'';
+ const source=copy?.source||p.source||'已核對的 Skyodor 產品資料';
+ document.querySelector('#detail').innerHTML='<section class="detail-hero"><div class="detail-image">'+gallery+'</div><div class="detail-copy"><p class="kicker">'+esc(p.code||p.size||'PRODUCT')+'</p><h1>'+esc(p.name)+'</h1>'+price+(description?'<div class="detail-section"><span class="kicker">產品故事與資料</span><p>'+nl(description)+'</p></div>':'')+(p.notes&&copy?.description?'<div class="detail-section"><span class="kicker">香氣筆記</span><p>'+nl(p.notes)+'</p></div>':'')+'<div class="detail-section"><span class="kicker">資料來源</span><p>來源頁：'+esc(source)+'</p></div><a class="button button-dark" href="'+(collection==='50ml'?'product-50ml.html':'product-30ml.html')+'">返回 '+esc(collection)+' 系列 <span>↗</span></a></div></section>';
 }
-Promise.all([fetch('content/product-catalog.json').then(r=>r.json()),fetch('content/product-50ml.json').then(r=>r.json())]).then(([a,b])=>{
+Promise.all([fetch('content/product-catalog.json').then(r=>r.json()),fetch('content/product-50ml.json').then(r=>r.json()),fetch('content/product-copy.json').then(r=>r.json())]).then(([a,b,c])=>{
+ const copy=c.products||{};
  const p50=(b.products||[]).find(x=>x.id===id);
- if(p50){render(p50,'50ml');return;}
+ if(p50){const pcopy=copy[Object.keys(copy).find(k=>copy[k].name===p50.name)];render(p50,'50ml',pcopy);return;}
  const p30=(a.products||[]).find(x=>x.code===code && (!name||x.name===name) && (!size||x.size===size));
- render(p30,'30ml');
+ render(p30,'30ml',copy[code]);
 }).catch(()=>{document.querySelector('#detail').innerHTML='<section class="page-intro"><h1>產品資料無法載入</h1></section>';});
 </script>
 </body></html>
