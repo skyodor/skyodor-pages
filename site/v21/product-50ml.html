@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ODOR 蝶漾香韻 50ml 沉香香水系列。">
+<title>50ml 沉香香水系列｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button><nav aria-label="主要導覽"><a href="index.html">首頁</a><a href="about.html">品牌與工藝</a><a href="products.html" aria-current="page">產品</a><a href="lifestyle.html">品香生活</a><a href="purchase-process.html">購買流程</a></nav></header>
+<main>
+<section class="page-intro"><p class="eyebrow">SIGNATURE COLLECTION / 50ML</p><h1>50ml<br>沉香香水系列</h1><p class="intro-copy">這一條產品線獨立呈現 50ml 產品，不再與 30ml 系列混排。內容依保存的來源頁重新整理。</p></section>
+<section class="catalog-grid catalog-grid-50" id="catalog"></section>
+</main>
+<footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回產品系列 ↗</a></footer>
+<script>
+const menu=document.querySelector('.menu'),nav=document.querySelector('nav');menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('content/product-50ml.json').then(r=>r.json()).then(d=>{
+document.querySelector('#catalog').innerHTML=(d.products||[]).map(p=>{
+const img=p.images?.[0]?'<img src="'+esc(p.images[0])+'" alt="'+esc(p.name)+'" loading="lazy">':'<div class="product-placeholder">50ml</div>';
+return '<article class="catalog-card catalog-card-signature"><a href="product.html?id='+encodeURIComponent(p.id)+'"><div class="catalog-image">'+img+'<span class="catalog-code">50ml</span></div><div class="catalog-copy"><div><h2>'+esc(p.name)+'</h2><p class="product-meta">50ml · NT$'+esc(p.price_twd)+'</p></div>'+(p.notes?'<p class="product-notes">'+esc(p.notes.split('\n')[0])+'</p>':'')+'</div></a></article>';
+}).join('');
+});
+</script>
+</body></html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="沉香精油香水30ml｜ODOR 蝶漾香韻完整系列。">
+<title>沉香精油香水30ml｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button><nav><a href="index.html">首頁</a><a href="about.html">品牌與工藝</a><a href="products.html" aria-current="page">完整產品</a><a href="lifestyle.html">品香生活</a><a href="purchase-process.html">購買流程</a></nav></header>
+<main>
+<section class="page-intro"><p class="eyebrow">30ML COLLECTION / CITY · LOVE · POETRY · SPIRIT · NATURE</p><h1>沉香精油香水<br>30ml</h1><p class="intro-copy">這一頁保留來源頁的完整產品編錄，重新以系列化卡片呈現，不再把 Weebly 的舊版版型帶入新站。</p></section>
+<section class="catalog-toolbar"><div><span class="eyebrow">30ML COLLECTION</span><strong id="count">—</strong></div><div class="catalog-filter"><button type="button" data-filter="ALL" class="is-active">全部</button><button type="button" data-filter="C">C</button><button type="button" data-filter="L">L</button><button type="button" data-filter="P">P</button><button type="button" data-filter="S">S</button><button type="button" data-filter="N">N</button></div></section>
+<section class="catalog-grid" id="catalog"></section>
+</main>
+<footer><span>ODOR 蝶漾香韻</span><a href="products.html">完整產品目錄 ↗</a></footer>
+<script>
+const menu=document.querySelector('.menu'),nav=document.querySelector('nav');menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+const catalog=document.querySelector('#catalog'),count=document.querySelector('#count');let products=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(filter='ALL'){const list=filter==='ALL'?products:products.filter(p=>String(p.code||'').replace('NO.','').charAt(0)===filter);count.textContent=list.length+' ITEMS';catalog.innerHTML=list.map(p=>'<article class="catalog-card"><a href="product.html?code='+encodeURIComponent(p.code)+'&name='+encodeURIComponent(p.name)+'"><div class="catalog-image">'+(p.image?'<img src="'+esc(p.image)+'" alt="'+esc(p.name)+'" loading="lazy">':'<div class="product-placeholder">'+esc(p.code)+'</div>')+'<span class="catalog-code">'+esc(p.code)+'</span></div><div class="catalog-copy"><div><h2>'+esc(p.name)+'</h2><p class="product-meta">'+esc(p.size||'30ml')+(p.price_twd!=null?' · NT$'+esc(p.price_twd):'')+'</p></div>'+(p.notes?'<p class="product-notes">'+esc(p.notes)+'</p>':'')+'</div></a></article>').join('');}
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('is-active'));b.classList.add('is-active');render(b.dataset.filter);}));
+fetch('content/product-catalog.json').then(r=>r.json()).then(d=>{products=(d.products||[]).filter(p=>String(p.size).includes('30ml'));render();});
+</script>
+</body></html>
