@@ -32,19 +32,28 @@ jobs:
       - name: Install validation dependency
         run: python -m pip install beautifulsoup4
 
-      - name: Validate standalone new site
+      - name: Validate v2.1 portable static site
+        run: |
+          python scripts/validate_static_site.py site/v21
+          if grep -RInE 'https?://(www\\.)?skyodor\\.com|https?://skyodor\\.github\\.io|/site/v21/|/site/new/' site/v21 --include='*.html' --include='*.css' --include='*.js'; then
+            echo 'ERROR: v2.1 contains a hard-coded internal/deployment URL.'
+            exit 1
+          fi
+
+      - name: Validate legacy new site
         run: python scripts/validate_new_site.py
 
       - name: Prepare versioned sites
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p deploy/v1.1 deploy/v1.2 deploy/v03 deploy/v1.3 deploy/new
+          mkdir -p deploy/v1.1 deploy/v1.2 deploy/v03 deploy/v1.3 deploy/new deploy/v21
           cp -a site/v1.1/. deploy/v1.1/
           cp -a site/v1.2/. deploy/v1.2/
           cp -a site/v03/. deploy/v03/
           cp -a v1.3/. deploy/v1.3/
           cp -a site/new/. deploy/new/
+          cp -a site/v21/. deploy/v21/
           touch deploy/.nojekyll
 
       - name: Configure GitHub Pages
