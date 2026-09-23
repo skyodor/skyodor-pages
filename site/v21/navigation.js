@@ -9,10 +9,10 @@
       <button type="button" class="nav-parent" aria-expanded="false">產品 <span>⌄</span></button>
       <div class="nav-menu">
         <a href="products.html">全部產品</a>
-        <a href="product-30ml.html">生產線 · 30ml</a>
-        <a href="product-50ml.html">生產線 · 50ml</a>
-        <a href="category.html">沉香／大香</a>
-        <a href="product-50mlx.html">50ml X</a>
+        <a href="product-lines.html">產品線</a>
+        <a href="products/30ml.html">30ml</a>
+        <a href="products/50ml.html">50ml</a>
+        <a href="products/50ml-x.html">50ml X</a>
       </div>
     </div>
     <a href="lifestyle.html"${current === 'lifestyle.html' ? ' aria-current="page"' : ''}>品香生活</a>
