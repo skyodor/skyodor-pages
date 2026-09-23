@@ -1,101 +1,79 @@
 {
-  "source": {
-    "domain": "www.skyodor.com",
-    "baseline": "site/v0.1",
-    "inventory_status": "source_cataloged_text_and_routes",
-    "verified_from": "main/site/v0.1 HTML files",
-    "notes": [
-      "Names, navigation routes, visible product text, prices and image filenames are copied from the archived source HTML.",
-      "Binary asset transfer remains a separate implementation task; no image filenames are invented.",
-      "Legacy files remain untouched."
-    ]
+  "schema_version":"2.1-canonical-product-model",
+  "source":{
+    "baseline":"site/v0.1",
+    "verified_from":"main/site/v0.1 HTML files",
+    "rule":"Source conflicts remain flagged; no unsupported product merges are invented."
   },
-  "navigation": [
-    {"label": "蝶漾香韻", "source_path": "index.html"},
-    {"label": "沉香精油香水30ml", "source_path": "27785393213193427833393212770030ml.html"},
-    {"label": "沉香精油香水50mlx", "source_path": "27785393213193427833393212770050mlx.html"},
-    {"label": "沉香精油香水50ml", "source_path": "27785393213193427833393212770050ml.html"},
-    {"label": "品香生活", "source_path": "21697393212998327963.html"},
-    {"label": "擴香圖騰木片", "source_path": "258443932122294394722640829255.html"},
-    {"label": "購買流程", "source_path": "36092360232796931243.html"},
-    {"label": "FACEBOOK", "url": "https://www.facebook.com/%E8%9D%B6%E6%BC%BE%E9%A6%99%E9%9F%BB-236727503596106/?epa=SEARCH_BOX"},
-    {"label": "Category", "source_path": "category.html"}
+  "information_pages":[
+    {"id":"all-products","label":"全部產品","type":"catalog-index","path":"products.html"},
+    {"id":"product-lines","label":"產品線","type":"information","path":"product-lines.html"},
+    {"id":"line-30ml","label":"30ml","type":"product-line","path":"products/30ml.html"},
+    {"id":"line-50ml","label":"50ml","type":"product-line","path":"products/50ml.html"},
+    {"id":"line-50ml-x","label":"50ml X","type":"product-line","path":"products/50ml-x.html"}
   ],
-  "pages": [
-    {"path": "index.html", "type": "home", "title": "蝶漾香韻", "status": "source_identified"},
-    {"path": "category.html", "type": "category", "title": "蝶漾香韻大香", "status": "source_identified"},
-    {"path": "27785393213193427833393212770030ml.html", "type": "product_catalog", "title": "沉香精油香水30ml", "status": "text_and_images_cataloged"},
-    {"path": "27785393213193427833393212770050ml.html", "type": "product", "title": "關聖帝君沉香50ml", "status": "source_identified"},
-    {"path": "27785393213193427833393212770050mlx.html", "type": "product", "title": "沉香精油香水50mlx", "status": "source_identified"},
-    {"path": "21697393212998327963.html", "type": "page", "title": "品香生活", "status": "text_and_images_cataloged"},
-    {"path": "258443932122294394722640829255.html", "type": "page", "title": "擴香圖騰木片", "status": "text_and_images_cataloged"},
-    {"path": "36092360232796931243.html", "type": "page", "title": "購買流程", "status": "source_identified"}
+  "product_model":{
+    "identity_rule":"product.code is the canonical identity; a product may have multiple formats but must never be duplicated by collection",
+    "collection_rule":"collection pages reference canonical product IDs and render unique products",
+    "format_rule":"30ml, 50ml and 50ml X are product-line/format relationships, not duplicate product databases"
+  },
+  "products":[
+    {"code":"NO.C1","name":"皇室派對","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C2","name":"紐約那天","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C3","name":"偷心戀人","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C4","name":"悸動過後","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C5","name":"舞動誘惑","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C6","name":"讀你","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C7","name":"夏季飄香","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C8","name":"2008","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.C9","name":"光譜大地","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L1","name":"依偎","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L2","name":"重生續愛","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L3","name":"阿拉斯加戀人","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L4","name":"愛神","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L5","name":"悅愛","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.L6","name":"激情夜畔","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P1","name":"富貴牡丹","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P2","name":"茉莉花季","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P3","name":"白玫瑰","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P4","name":"森林大地","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P5","name":"沉香油","formats":["1ml"],"price_twd":5350},
+    {"code":"NO.P6","name":"祝福有餘","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P7","name":"台灣風情","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P8","name":"雪茄菸草","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P9","name":"絕妙玫瑰","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P10","name":"韶光","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.P11","name":"戀玫瑰","formats":["30ml"],"price_twd":3200},
+    {"code":"NO.P12","name":"關聖帝君沉香香水","formats":["30ml"],"price_twd":3000,"source_conflict":"source page is titled 關聖帝君沉香50ml; size requires reconciliation before relabeling"},
+    {"code":"NO.P13","name":"王母娘娘聖露水","formats":["50ml"],"price_twd":3900},
+    {"code":"NO.S1","name":"勇敢","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.S2","name":"雍容","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.S3","name":"彩虹","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.S4","name":"時尚大師","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.S5","name":"暖心","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.S6","name":"沉迷","formats":["30ml"],"price_twd":2700},
+    {"code":"NO.S7","name":"檀魂","formats":["30ml"],"price_twd":3000},
+    {"code":"NO.S8","name":"旅人","formats":["30ml"],"price_twd":2600},
+    {"code":"NO.N1","name":"星月呢喃","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.N2","name":"蔚海藍天","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.N3","name":"霎那春秋","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.N4","name":"曙光九號","formats":["30ml"],"price_twd":2450},
+    {"code":"NO.N5","name":"島上天空","formats":["30ml"],"price_twd":2450,"source_conflict":"source inventory contains NO.N5 twice with .1 and .2; retain one canonical code pending source reconciliation"},
+    {"code":"NO.N6","name":"聖露水","formats":["30ml"],"price_twd":3000}
   ],
-  "products": [
-    {"code":"NO.C1","name":"皇室派對","size":"30ml","price_twd":2450},
-    {"code":"NO.C2","name":"紐約那天","size":"30ml","price_twd":2450},
-    {"code":"NO.C3","name":"偷心戀人","size":"30ml","price_twd":2450},
-    {"code":"NO.C4","name":"悸動過後","size":"30ml","price_twd":2450},
-    {"code":"NO.C5","name":"舞動誘惑","size":"30ml","price_twd":2450},
-    {"code":"NO.C6","name":"讀你","size":"30ml","price_twd":2450},
-    {"code":"NO.C7","name":"夏季飄香","size":"30ml","price_twd":2450},
-    {"code":"NO.C8","name":"2008","size":"30ml","price_twd":2450},
-    {"code":"NO.C9","name":"光譜大地","size":"30ml","price_twd":2450},
-    {"code":"NO.L1","name":"依偎","size":"30ml","price_twd":2450},
-    {"code":"NO.L2","name":"重生續愛","size":"30ml","price_twd":2450},
-    {"code":"NO.L3","name":"阿拉斯加戀人","size":"30ml","price_twd":2450},
-    {"code":"NO.L4","name":"愛神","size":"30ml","price_twd":2450},
-    {"code":"NO.L5","name":"悅愛","size":"30ml","price_twd":2450},
-    {"code":"NO.L6","name":"激情夜畔","size":"30ml","price_twd":2450},
-    {"code":"NO.P1","name":"富貴牡丹","size":"30ml","price_twd":2450},
-    {"code":"NO.P2","name":"茉莉花季","size":"30ml","price_twd":2450},
-    {"code":"NO.P3","name":"白玫瑰","size":"30ml","price_twd":2450},
-    {"code":"NO.P4","name":"森林大地","size":"30ml","price_twd":2450},
-    {"code":"NO.P5","name":"沉香油","size":"1ml","price_twd":5350},
-    {"code":"NO.P6","name":"祝福有餘","size":"30ml","price_twd":2450},
-    {"code":"NO.P7","name":"台灣風情","size":"30ml","price_twd":2450},
-    {"code":"NO.P8","name":"雪茄菸草","size":"30ml","price_twd":2450},
-    {"code":"NO.P9","name":"絕妙玫瑰","size":"30ml","price_twd":2450},
-    {"code":"NO.P10","name":"韶光","size":"30ml","price_twd":2450},
-    {"code":"NO.P11","name":"戀玫瑰","size":"30ml","price_twd":3200},
-    {"code":"NO.P12","name":"關聖帝君沉香香水","size":"30ml","price_twd":3000},
-    {"code":"NO.P13","name":"王母娘娘聖露水","size":"50ml","price_twd":3900},
-    {"code":"NO.S1","name":"勇敢","size":"30ml","price_twd":2450},
-    {"code":"NO.S2","name":"雍容","size":"30ml","price_twd":2450},
-    {"code":"NO.S3","name":"彩虹","size":"30ml","price_twd":2450},
-    {"code":"NO.S4","name":"時尚大師","size":"30ml","price_twd":2450},
-    {"code":"NO.S5","name":"暖心","size":"30ml","price_twd":2450},
-    {"code":"NO.S6","name":"沉迷","size":"30ml","price_twd":2700},
-    {"code":"NO.S7","name":"檀魂","size":"30ml","price_twd":3000},
-    {"code":"NO.S8","name":"旅人","size":"30ml","price_twd":2600},
-    {"code":"NO.N1","name":"星月呢喃","size":"30ml","price_twd":2450},
-    {"code":"NO.N2","name":"蔚海藍天","size":"30ml","price_twd":2450},
-    {"code":"NO.N3","name":"霎那春秋","size":"30ml","price_twd":2450},
-    {"code":"NO.N4","name":"曙光九號","size":"30ml","price_twd":2450},
-    {"code":"NO.N5","name":"島上天空.1","size":"30ml","price_twd":2450},
-    {"code":"NO.N5","name":"島上天空.2","size":"30ml","price_twd":2450},
-    {"code":"NO.N6","name":"聖露水","size":"30ml","price_twd":3000}
+  "source_specific_products":[
+    {"source_path":"27785393213193427833393212770050ml.html","label":"關聖帝君沉香50ml","format":"50ml","status":"source-identified; reconcile with NO.P12 before merge"},
+    {"source_path":"27785393213193427833393212770050mlx.html","label":"沉香精油香水50mlx","format":"50ml X","status":"source-identified; do not merge with 50ml without source evidence"}
   ],
-  "other_offerings": [
+  "other_offerings":[
     {"name":"逸品 立臥沉香","price_twd":3600,"source_page":"21697393212998327963.html"},
     {"name":"韻品 沉香禮盒","price_twd":2880,"source_page":"21697393212998327963.html"},
     {"name":"寰宇凝萃 天然沉香純單方精油","prices":"1ml $3,900元; 3ml $10,900","source_page":"21697393212998327963.html"},
     {"name":"圖騰擴香木片組","price_twd":1480,"source_page":"258443932122294394722640829255.html","refill_note":"香精油加購優惠$850"}
   ],
-  "verified_brand_content": {
+  "verified_brand_content":{
     "hero_title":"剎那與永恆",
     "keynote":"沉香",
-    "core_value":"合香與調香",
-    "opening":"三角形LOGO鈕扣右推打開，左推闔上。"
-  },
-  "assets": {
-    "source_root":"assets/uploads/1/2/8/6/128601763/",
-    "status":"source_filenames_cataloged; binary_copy_pending",
-    "known_page_image_groups": {
-      "21697393212998327963.html":["s-7455136_orig.jpg","s-7455133_orig.jpg","s-7455137_orig.jpg","s-7455135_orig.jpg","s-7455140_orig.jpg","s-7455142_orig.jpg","s-7495695_orig.jpg","s-7495697_orig.jpg","s-7495693_orig.jpg","s-7495696_orig.jpg","sky_orig.jpg"],
-      "258443932122294394722640829255.html":["s-206217236_orig.jpg","s-206217234_orig.jpg","s-206217235_orig.jpg","sky_orig.jpg"],
-      "36092360232796931243.html":["519509099_orig.jpg","sky_orig.jpg"],
-      "27785393213193427833393212770030ml.html":["391588720_orig.jpg","yutacar-jkmnm3cincw-unsplash.jpg","1244221102.jpg","2087698222.jpg","mohammad-alizade-dunskupql7g-unsplash.jpg","chermiti-mohamed-gjvokrp-6yk-unsplash.jpg","adult-black-and-white-concentration-1061130.jpg","city-buildings-near-body-of-water-1449455.jpg","s-207052814.jpg","architecture-buildings-city-cityscape-366283.jpg","lover_orig.jpg","1001009257_orig.jpg","154873243_orig.jpg","1294541233_orig.jpg","sky_orig.jpg"]
-    }
+    "core_value":"合香與調香"
   }
 }
