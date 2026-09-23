@@ -1,32 +1,5 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="ODOR 蝶漾香韻產品詳細資料。"><title>產品詳細資料｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css"></head>
-<body>
-<header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button><nav aria-label="主要導覽"><a href="index.html">首頁</a><a href="about.html">品牌與工藝</a><a href="products.html" aria-current="page">產品</a><a href="purchase-process.html">購買流程</a></nav></header>
-<main id="detail" class="detail-page"></main>
-<footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回產品系列 ↗</a></footer>
-<script>
-const menu=document.querySelector('.menu'),nav=document.querySelector('nav');menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
-const q=new URLSearchParams(location.search),id=q.get('id'),code=q.get('code'),name=q.get('name'),size=q.get('size');
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const nl=s=>esc(s).replace(/\n/g,'<br>');
-function render(p,collection,copy){
- if(!p){document.querySelector('#detail').innerHTML='<section class="page-intro"><p class="kicker">PRODUCT</p><h1>找不到產品</h1><a class="button button-dark" href="products.html">返回產品系列 ↗</a></section>';return;}
- document.title=p.name+'｜ODOR 蝶漾香韻';
- const images=collection==='50ml'?(p.images||[]):(p.image?[p.image]:[]);
- const gallery=images.length?'<div class="detail-gallery">'+images.map(src=>'<img src="'+esc(src)+'" alt="'+esc(p.name)+'">').join('')+'</div>':'<div class="detail-placeholder">ODOR</div>';
- const price=p.price_twd!=null?'<p class="detail-price">'+esc(p.size||'')+'　NT$'+esc(p.price_twd)+(p.list_price_twd?'<span class="detail-list-price">NT$'+esc(p.list_price_twd)+'</span>':'')+'</p>':'';
- const description=copy?.description||p.notes||'';
- const source=copy?.source||p.source||'已核對的 Skyodor 產品資料';
- document.querySelector('#detail').innerHTML='<section class="detail-hero"><div class="detail-image">'+gallery+'</div><div class="detail-copy"><p class="kicker">'+esc(p.code||p.size||'PRODUCT')+'</p><h1>'+esc(p.name)+'</h1>'+price+(description?'<div class="detail-section"><span class="kicker">產品故事與資料</span><p>'+nl(description)+'</p></div>':'')+(p.notes&&copy?.description?'<div class="detail-section"><span class="kicker">香氣筆記</span><p>'+nl(p.notes)+'</p></div>':'')+'<div class="detail-section"><span class="kicker">資料來源</span><p>來源頁：'+esc(source)+'</p></div><a class="button button-dark" href="'+(collection==='50ml'?'product-50ml.html':'product-30ml.html')+'">返回 '+esc(collection)+' 系列 <span>↗</span></a></div></section>';
-}
-Promise.all([fetch('content/product-catalog.json').then(r=>r.json()),fetch('content/product-50ml.json').then(r=>r.json()),fetch('content/product-copy.json').then(r=>r.json())]).then(([a,b,c])=>{
- const copy=c.products||{};
- const p50=(b.products||[]).find(x=>x.id===id);
- if(p50){const pcopy=copy[Object.keys(copy).find(k=>copy[k].name===p50.name)];render(p50,'50ml',pcopy);return;}
- const p30=(a.products||[]).find(x=>x.code===code && (!name||x.name===name) && (!size||x.size===size));
- render(p30,'30ml',copy[code]);
-}).catch(()=>{document.querySelector('#detail').innerHTML='<section class="page-intro"><h1>產品資料無法載入</h1></section>';});
-</script>
-</body></html>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="ODOR 蝶漾香韻產品詳細資料。"><title>產品詳細資料｜ODOR 蝶漾香韻</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html"><strong>ODOR</strong><span>蝶漾香韻</span></a><button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button><nav aria-label="主要導覽"></nav></header><main id="detail" class="detail-page"></main><footer><span>ODOR 蝶漾香韻</span><a href="products.html">返回全部產品 ↗</a></footer><script src="navigation.js"></script><script>
+const q=new URLSearchParams(location.search),code=q.get('code');const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const nl=s=>esc(s).replace(/\n/g,'<br>');
+function render(p,copy){if(!p){document.querySelector('#detail').innerHTML='<section class="page-intro"><p class="kicker">PRODUCT</p><h1>找不到產品</h1><a class="button button-dark" href="products.html">返回全部產品 ↗</a></section>';return;}document.title=p.name+'｜ODOR 蝶漾香韻';const images=p.image?[p.image]:[];const gallery=images.length?'<div class="detail-gallery">'+images.map(src=>'<img src="'+esc(src)+'" alt="'+esc(p.name)+'">').join('')+'</div>':'<div class="detail-placeholder">ODOR</div>';const formats=(p.formats||[]).join(' · ');const price=p.price_twd!=null?'<p class="detail-price">'+esc(formats)+'　NT$'+esc(p.price_twd)+'</p>':'';const description=copy?.description||p.notes||'';const source=copy?.source||'來源資料庫';document.querySelector('#detail').innerHTML='<section class="detail-hero"><div class="detail-image">'+gallery+'</div><div class="detail-copy"><p class="kicker">'+esc(p.code)+'</p><h1>'+esc(p.name)+'</h1>'+price+(description?'<div class="detail-section"><span class="kicker">產品故事與資料</span><p>'+nl(description)+'</p></div>':'')+(p.notes&&copy?.description?'<div class="detail-section"><span class="kicker">香氣筆記</span><p>'+nl(p.notes)+'</p></div>':'')+(p.source_conflict?'<div class="detail-section"><span class="kicker">資料核對</span><p>'+nl(p.source_conflict)+'</p></div>':'')+'<div class="detail-section"><span class="kicker">資料來源</span><p>'+esc(source)+'</p></div><a class="button button-dark" href="products.html">返回全部產品 <span>↗</span></a></div></section>';}
+Promise.all([fetch('content/inventory.json').then(r=>r.json()),fetch('content/product-copy.json').then(r=>r.json())]).then(([data,c])=>{const p=(data.products||[]).find(x=>x.code===code);const copy=(c.products||{})[code];render(p,copy);}).catch(()=>{document.querySelector('#detail').innerHTML='<section class="page-intro"><h1>產品資料無法載入</h1></section>';});
+</script></body></html>
