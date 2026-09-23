@@ -8,14 +8,26 @@
 
   // Canonical site branding: SKYODOR / 蝶漾香韻.
   const applyBrand = () => {
-    document.querySelectorAll('.brand strong').forEach(el => { el.textContent = 'SKYODOR'; });
-    document.querySelectorAll('.brand').forEach(el => el.setAttribute('aria-label', 'SKYODOR 蝶漾香韻'));
-    document.querySelectorAll('footer span, .product-placeholder, .detail-placeholder').forEach(el => {
-      if (el.textContent.trim() === 'ODOR') el.textContent = 'SKYODOR';
+    document.querySelectorAll('.brand').forEach(el => {
+      el.innerHTML = '<strong>SKYODOR /</strong><span> 蝶漾香韻</span>';
+      el.setAttribute('aria-label', 'SKYODOR / 蝶漾香韻');
     });
-    if (document.title.includes('ODOR')) document.title = document.title.replaceAll('ODOR', 'SKYODOR');
+    document.querySelectorAll('footer div').forEach(el => {
+      const strong = el.querySelector('strong');
+      const span = el.querySelector('span');
+      if (strong && span && (strong.textContent.trim() === 'SKYODOR' || strong.textContent.trim() === 'ODOR')) {
+        strong.textContent = 'SKYODOR /';
+        span.textContent = ' 蝶漾香韻';
+      }
+    });
+    document.querySelectorAll('.product-placeholder, .detail-placeholder').forEach(el => {
+      if (/^(ODOR|SKYODOR)$/.test(el.textContent.trim())) el.textContent = 'SKYODOR';
+    });
+    if (document.title.includes('ODOR') || document.title.includes('｜蝶漾香韻')) {
+      document.title = document.title.replaceAll('ODOR', 'SKYODOR').replaceAll('SKYODOR｜蝶漾香韻', 'SKYODOR / 蝶漾香韻');
+    }
     document.querySelectorAll('meta[name="description"]').forEach(el => {
-      if (el.content.includes('ODOR')) el.content = el.content.replaceAll('ODOR', 'SKYODOR');
+      el.content = el.content.replaceAll('ODOR', 'SKYODOR').replaceAll('SKYODOR 蝶漾香韻', 'SKYODOR / 蝶漾香韻');
     });
   };
   applyBrand();
