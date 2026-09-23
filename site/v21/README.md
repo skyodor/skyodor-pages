@@ -1,18 +1,23 @@
-# ODOR 新網站
+# ODOR v2.1 — Portable Static Website
 
-This directory is the standalone new-site implementation under `site/new`.
+This directory is the authoritative v2.1 static-site implementation.
 
-## Completed in this migration pass
+## Architecture
 
-- Original source asset tree is available under `site/new/assets/`.
-- Homepage uses verified source wording and original source imagery.
-- Unverified descriptive copy was removed from the brand page.
-- Responsive navigation and image sections are implemented without an external font/CDN dependency.
-- Local-reference validation is available through `scripts/validate_new_site.py`.
-- Legacy directories are not used as runtime dependencies by the new site.
+- Completely static HTML, CSS, JavaScript and local assets.
+- Internal pages and assets use relative paths.
+- No Weebly, WordPress, database, CMS, GitHub Pages, or domain dependency at runtime.
+- The complete v2.1 directory can be copied to another host or directory and served as a standalone website.
+- Source assets are contained under `assets/`; source/content records are retained under `content/`.
 
-## Scope
+## Validation
 
-The new site remains separate from the legacy versions. The existing `v03` files and build process are intentionally untouched.
+The deployment workflow validates `site/v21` for missing local references and checks for hard-coded deployment/domain paths before publishing.
 
-Product/purchase presentation remains subject to the existing source-verification and publication rules; no missing source information is invented.
+## Deployment
+
+GitHub Pages is only one hosting destination. It is not part of the v2.1 runtime architecture.
+
+## Content policy
+
+Existing source content and imagery are retained where verified. Missing or uncertain source information is not silently invented.
