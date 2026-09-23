@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.skyodor.com/schemas/content-database.schema.json",
+  "$id": "schemas/content-database.schema.json",
   "title": "Skyodor Content Database",
   "type": "object",
   "required": ["schema_version", "database_name", "source", "data_contract", "entities", "relationships", "quality_control"],
