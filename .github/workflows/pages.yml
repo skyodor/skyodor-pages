@@ -35,8 +35,8 @@ jobs:
       - name: Validate v2.1 portable static site
         run: |
           python scripts/validate_static_site.py site/v21
-          if grep -RInE 'https?://(www\\.)?skyodor\\.com|https?://skyodor\\.github\\.io|/site/v21/|/site/new/' site/v21 --include='*.html' --include='*.css' --include='*.js'; then
-            echo 'ERROR: v2.1 contains a hard-coded internal/deployment URL.'
+          if grep -RInE 'https?://(www\\.)?skyodor\\.com|https?://skyodor\\.github\\.io|/site/v21/|/site/new/|chatgpt\\.com|openai\\.com' site/v21 --include='*.html' --include='*.css' --include='*.js' --include='*.json' --include='*.md'; then
+            echo 'ERROR: v2.1 contains a forbidden domain, deployment URL, or ChatGPT/OpenAI reference.'
             exit 1
           fi
 
@@ -54,7 +54,12 @@ jobs:
           cp -a v1.3/. deploy/v1.3/
           cp -a site/new/. deploy/new/
           cp -a site/v21/. deploy/v21/
+          python scripts/apply_v21_navigation.py
+          cp -a site/v21/. deploy/v21/
           touch deploy/.nojekyll
+
+      - name: Validate generated v2.1 deployment tree
+        run: python scripts/validate_static_site.py deploy/v21
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
