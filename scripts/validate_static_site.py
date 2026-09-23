@@ -11,8 +11,6 @@ ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else "site")
 errors = []
 checked = 0
 images = 0
-
-# Audit every UTF-8 text file type that can participate in a static deployment.
 text_exts = {
     ".html", ".htm", ".css", ".js", ".mjs", ".cjs", ".json", ".jsonc",
     ".md", ".txt", ".xml", ".svg", ".webmanifest", ".map", ".yaml", ".yml",
@@ -63,7 +61,6 @@ for path in ROOT.rglob("*"):
                 raw = node.get(attr)
                 if not isinstance(raw, str) or not raw:
                     continue
-                # srcset may contain several candidates; validate each local candidate.
                 values = [part.strip().split()[0] for part in raw.split(",")] if attr == "srcset" else [raw]
                 for value in values:
                     if value.startswith(("#", "data:", "mailto:", "tel:", "javascript:", "http://", "https://", "//")):
@@ -85,18 +82,21 @@ for path in ROOT.rglob("*"):
             if target_path and not (path.parent / target_path).resolve().exists():
                 errors.append(f"{rel}: missing CSS asset -> {raw}")
 
-    # Check explicit local asset/path strings in JS/JSON/Markdown/config files.
     if path.suffix.lower() not in {".html", ".htm", ".css"}:
         for raw in local_string_pattern.findall(text):
             raw_path = urlsplit(raw).path
             if not raw_path:
                 continue
-            # Source provenance such as site/v0.1/... is reference data, not a runtime path.
-            if raw.startswith("assets/") or raw.startswith(("./assets/", "../assets/", "content/", "./content/", "../content/", "fonts/", "images/", "css/", "js/")):
-                checked += 1
+            if raw.startswith("assets/"):
+                # Site-data JSON stores assets relative to the static package root.
+                target = (ROOT / raw_path).resolve()
+            elif raw.startswith(("./assets/", "../assets/", "content/", "./content/", "../content/", "fonts/", "images/", "css/", "js/")):
                 target = (path.parent / raw_path).resolve()
-                if not target.exists():
-                    errors.append(f"{rel}: missing local reference -> {raw}")
+            else:
+                continue
+            checked += 1
+            if not target.exists():
+                errors.append(f"{rel}: missing local reference -> {raw}")
 
 print(f"Audited all text files under {ROOT}; validated {checked} local references; found {images} image/source nodes")
 if errors:
