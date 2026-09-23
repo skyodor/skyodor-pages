@@ -3,7 +3,7 @@
 from __future__ import annotations
 import sys
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else "site")
@@ -23,7 +23,11 @@ for html in ROOT.rglob("*.html"):
             if raw.startswith(("#", "data:", "mailto:", "javascript:", "http://", "https://", "//")):
                 continue
             checked += 1
-            target = (html.parent / raw).resolve()
+            # Query strings and fragments are browser routing metadata, not filesystem paths.
+            path_part = urlsplit(raw).path
+            if not path_part:
+                continue
+            target = (html.parent / path_part).resolve()
             if not target.exists():
                 errors.append(f"{html}: missing {attr} -> {raw}")
 
