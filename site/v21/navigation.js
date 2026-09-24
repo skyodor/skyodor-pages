@@ -56,7 +56,6 @@
     <div class="nav-dropdown">
       <button type="button" class="nav-parent" aria-expanded="false">產品 <span aria-hidden="true">⌄</span></button>
       <div class="nav-menu">
-        <a href="${href('products.html')}">全部產品</a>
         <a href="${href('products/30ml.html')}">30ml</a>
         <a href="${href('products/50ml.html')}">50ml</a>
       </div>
