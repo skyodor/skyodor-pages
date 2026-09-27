@@ -63,6 +63,7 @@ jobs:
       - name: Validate legacy new site
         run: python scripts/validate_new_site.py
 
+      # Keep the deployment workflow itself in the push-triggered path so a main-branch content fix always gets a deployment attempt.
       - name: Prepare versioned sites
         shell: bash
         run: |
