@@ -1,0 +1,52 @@
+:root{--pro-max:1240px;--pro-pad:clamp(22px,5vw,72px)}
+/* Final v21 design layer: preserve source content, improve hierarchy and spacing. */
+.site-header{height:76px;padding-inline:var(--pro-pad)}
+.site-header nav{gap:clamp(18px,2.5vw,34px)}
+.page-hero,.page-intro{max-width:var(--pro-max);margin:0 auto;padding:clamp(76px,9vw,132px) var(--pro-pad) clamp(64px,8vw,108px);background:transparent;border:0}
+.page-hero h1,.page-intro h1{max-width:900px;margin:18px 0 20px;font-size:clamp(3.6rem,7.4vw,7.8rem);line-height:.92}
+.page-hero p:not(.eyebrow),.intro-copy{max-width:700px;font-size:1.02rem;line-height:1.95}
+.eyebrow{margin:0;color:var(--muted);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase}
+/* Homepage hero: two independent image blocks; first image is never layered over second. */
+.home-hero-new{display:block;min-height:0;overflow:visible;background:transparent}
+.home-hero-new>.home-hero-first-image{position:static!important;display:block;width:100%;height:auto;max-width:100%;margin:0 auto;object-fit:contain;object-position:center;background:#364035;filter:none!important}
+.home-hero-new>.home-hero-second-image{position:relative!important;inset:auto!important;display:block;width:100%;height:auto;max-width:100%;margin:clamp(20px,4vw,56px) auto 0;object-fit:contain;object-position:center;z-index:auto!important;filter:none!important}
+.home-hero-new>.home-hero-overlay{display:none!important}
+.home-hero-new>.home-hero-copy{position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + clamp(20px,4vw,56px));width:min(var(--pro-max),calc(100% - 2 * var(--pro-pad)));color:#fff;z-index:4;pointer-events:none}
+.home-hero-new>.home-hero-copy .kicker{color:rgba(255,255,255,.78)}
+.home-hero-new>.home-hero-copy h1{font-size:clamp(3.2rem,7vw,7.6rem)}
+.home-hero-new>.home-hero-copy p:not(.kicker){font-size:1rem}
+/* If the current markup uses the wrapper created for the second image, keep text tied to that image. */
+.home-hero-second{position:relative;overflow:hidden;background:#1f281f}
+.home-hero-second img{width:100%;height:auto;display:block}
+.home-hero-second .home-hero-copy{position:absolute;inset:auto auto clamp(28px,6vw,80px) clamp(24px,6vw,90px);transform:none;width:min(760px,calc(100% - 48px));color:#fff;z-index:2;pointer-events:none}
+.home-hero-second:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(13,18,13,.72) 100%);pointer-events:none}
+/* Page content rhythm */
+.statement,.craft,.section-block,.content-grid,.collection-heading{max-width:var(--pro-max);margin-inline:auto}
+.statement{padding-inline:var(--pro-pad)}
+.craft{padding-inline:var(--pro-pad)}
+.content-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding-inline:var(--pro-pad)}
+.story-card{min-height:250px;padding:clamp(26px,3vw,44px);display:flex;flex-direction:column;justify-content:flex-end}
+.section-block{padding-inline:var(--pro-pad)}
+.collection-heading{padding-inline:var(--pro-pad)}
+/* Product catalog */
+.catalog-toolbar{padding-inline:var(--pro-pad);max-width:var(--pro-max);margin:auto}
+.catalog-grid{max-width:var(--pro-max);margin:auto;gap:1px}
+.catalog-image{aspect-ratio:1/1;height:auto}
+.catalog-copy{padding:24px 24px 30px}
+.catalog-copy h2,.catalog-copy h3{font-size:clamp(1.45rem,2vw,2rem)}
+/* Product detail */
+.detail-hero{max-width:1440px;margin:auto;min-height:72vh}
+.detail-image{min-height:680px}
+.detail-copy{padding:clamp(50px,7vw,110px)}
+.detail-copy h1{font-size:clamp(3.2rem,6vw,6.5rem)}
+/* Source-migrated pages */
+.source-content{max-width:var(--pro-max);padding-inline:var(--pro-pad)}
+.source-content .imageGallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.source-content .wsite-image img{margin-inline:auto}
+.source-content table{border-collapse:separate;border-spacing:0}
+.source-content td{vertical-align:top}
+/* Footer image stays complete rather than being cropped as a background. */
+.site-footer:before{height:auto;aspect-ratio:4/1;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#171815}
+.site-footer{background:#171815}
+@media(max-width:900px){.content-grid{grid-template-columns:1fr 1fr}.detail-hero{grid-template-columns:1fr}.detail-image{min-height:56vh}.source-content .imageGallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.site-header{height:64px}.content-grid{grid-template-columns:1fr}.page-hero,.page-intro{padding-inline:24px}.home-hero-new>.home-hero-copy{width:calc(100% - 48px)}.source-content .imageGallery{grid-template-columns:1fr}.detail-copy{padding:52px 24px}.site-footer:before{aspect-ratio:3/1}}
