@@ -3,12 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="0;url=products/30ml.html">
-<meta name="robots" content="noindex,follow">
-<title>30ml｜SKYODOR / 蝶漾香韻</title>
-<link rel="canonical" href="products/30ml.html">
+<meta name="description" content="SKYODOR / 蝶漾香韻｜全部產品。">
+<title>全部產品｜SKYODOR / 蝶漾香韻</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+.catalog-page{padding-bottom:80px}.catalog-hero{padding:clamp(72px,9vw,128px) max(28px,7vw);background:var(--paper2);border-bottom:1px solid var(--line)}.catalog-hero h1{font:500 clamp(3.6rem,7vw,7rem)/.94 var(--serif);letter-spacing:-.045em;margin:18px 0}.catalog-hero p:not(.kicker){max-width:680px;color:#5d625b;font:400 1rem/2 var(--serif)}.catalog-toolbar{position:sticky;top:72px;z-index:10;background:rgba(247,245,240,.97);backdrop-filter:blur(12px)}.catalog-count{font-size:.68rem;color:var(--muted);letter-spacing:.08em}.catalog-grid{min-height:300px}.catalog-card a{display:block;height:100%}.catalog-card .catalog-image{aspect-ratio:1/1;min-height:0;height:auto}.catalog-copy{min-height:0}.catalog-copy p{margin:.45rem 0 0;color:var(--muted);font-size:.74rem;line-height:1.65}.catalog-error{padding:80px 24px;text-align:center;color:var(--muted)}
+</style>
 </head>
 <body>
-<p><a href="products/30ml.html">前往 30ml</a></p>
+<header class="site-header"><a class="brand" href="index.html"><strong>SKYODOR /</strong><span> 蝶漾香韻</span></a><button class="menu" type="button" aria-label="開啟選單" aria-expanded="false">☰</button><nav aria-label="主要導覽"></nav></header>
+<main class="catalog-page">
+<section class="catalog-hero"><p class="kicker">SKYODOR / PRODUCTS</p><h1>全部產品</h1><p>產品資料直接取自目前的 canonical product catalogue；未在來源資料中確認的內容不會自行補寫。</p></section>
+<section class="catalog-toolbar"><div class="catalog-filter" id="filters"><button class="is-active" data-filter="all">全部</button><button data-filter="30ml">30ml</button><button data-filter="50ml">50ml</button><button data-filter="50ml X">50ml X</button></div><span class="catalog-count" id="count"></span></section>
+<section class="catalog-grid" id="catalog" aria-live="polite"></section>
+</main>
+<footer class="site-footer"><p>SKYODOR / 蝶漾香韻</p></footer>
+<script src="navigation.js"></script>
+<script>
+(async()=>{
+ const grid=document.getElementById('catalog'),count=document.getElementById('count'),filters=document.getElementById('filters');
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let products=[];
+ try{const r=await fetch('content/product-catalog.json');if(!r.ok)throw new Error('catalog');const data=await r.json();products=data.products||[];}catch(e){grid.innerHTML='<div class="catalog-error">產品目錄目前無法載入。</div>';return;}
+ const render=filter=>{const list=filter==='all'?products:products.filter(p=>p.size===filter);count.textContent=`${list.length} 項`;grid.innerHTML=list.map(p=>`<article class="catalog-card"><a href="product.html#${encodeURIComponent(p.code)}"><div class="catalog-image">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`:'<div class="product-placeholder">SKYODOR</div>'}<span class="catalog-code">${esc(p.code)}</span></div><div class="catalog-copy"><span class="kicker">${esc(p.size)}</span><h3>${esc(p.name)}</h3><span class="product-meta">NT$ ${Number(p.price_twd).toLocaleString()}</span>${p.notes?`<p>${esc(p.notes.split('|').slice(0,3).join(' · '))}</p>`:''}</div></a></article>`).join('');};
+ filters.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filters.querySelectorAll('button').forEach(x=>x.classList.remove('is-active'));b.classList.add('is-active');render(b.dataset.filter);});
+ render('all');
+})();
+</script>
 </body>
 </html>
